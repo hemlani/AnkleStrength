@@ -1,0 +1,831 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Ankle Str">
+<title>Ankle Strength Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f3ef; --white: #ffffff; --border: #e6e1d9; --border-lt: #eeebe5;
+    --accent: #2d6a5a; --accent-lt: #e5f2ed; --accent-bd: #b8ddd0; --accent-mid: #4a9a85;
+    --text: #2c2c2c; --text-mid: #5a5a5a; --text-lt: #999;
+    --done-bg: #e5f2ed; --done-bd: #b8ddd0; --done-tx: #2d6a5a;
+    --tip-bg: #fdf8f0; --tip-bd: #f0e6d4; --tip-label: #b8863e; --tip-tx: #7a6a52;
+    --warn-y: #c4952e; --warn-y-bg: #fdf6e8; --warn-r: #c45050; --warn-r-bg: #fdf0f0;
+    --input-bg: #faf8f6;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bot: env(safe-area-inset-bottom, 0px);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Nunito Sans', sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; min-height: 100dvh; overflow-x: hidden;
+    padding-top: var(--safe-top); padding-bottom: var(--safe-bot);
+  }
+  .header {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 20px 20px 16px;
+  }
+  .header h1 {
+    font-family: 'Source Serif 4', serif; font-size: 24px; font-weight: 600;
+    color: var(--accent); margin: 0 0 2px; letter-spacing: 0.3px;
+  }
+  .header .sub { font-size: 12px; color: var(--text-lt); letter-spacing: 1.5px; text-transform: uppercase; }
+  .stats-row { display: flex; gap: 12px; margin-top: 16px; }
+  .stat-box {
+    flex: 1; background: var(--accent-lt); border-radius: 12px; padding: 10px 12px;
+    border: 1px solid var(--accent-bd);
+  }
+  .stat-label { font-size: 10px; color: var(--text-lt); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+  .stat-val { font-size: 26px; font-weight: 700; color: var(--accent); }
+  .stat-val span { font-size: 13px; font-weight: 400; }
+  .progress-track { height: 4px; background: var(--border); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; background: linear-gradient(90deg, var(--accent-mid), var(--accent)); }
+  .progress-fill.done { background: var(--accent); }
+  .save-status {
+    font-size: 11px; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 10px;
+    transition: all 0.3s;
+  }
+  .save-status.ok { background: var(--done-bg); color: var(--done-tx); }
+  .save-status.err { background: var(--warn-r-bg); color: var(--warn-r); }
+
+
+  /* Tabs */
+  .tabs { display: flex; padding: 12px 20px 0; gap: 6px; }
+  .tab {
+    flex: 1; padding: 9px 0; border-radius: 10px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-lt); font-size: 12px; font-weight: 600;
+    font-family: 'Nunito Sans', sans-serif; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+  .tab.active { background: var(--accent-lt); border-color: var(--accent-bd); color: var(--accent); }
+
+
+  /* Cards */
+  .content { padding: 14px 20px 100px; }
+  .card {
+    background: var(--white); border: 1px solid var(--border-lt); border-radius: 14px;
+    padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    transition: all 0.3s;
+  }
+  .card.done { background: var(--done-bg); border-color: var(--done-bd); box-shadow: none; }
+  .card-head { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .card-emoji { font-size: 26px; }
+  .card-info { flex: 1; }
+  .card-name { font-size: 15px; font-weight: 600; color: var(--text); transition: all 0.2s; }
+  .card.done .card-name { color: var(--done-tx); text-decoration: line-through; opacity: 0.6; }
+  .card-meta { font-size: 11px; color: var(--text-mid); margin-top: 1px; }
+  .card-arrow { font-size: 16px; color: var(--text-lt); transition: transform 0.2s; }
+  .card-arrow.open { transform: rotate(180deg); }
+
+
+  .card-body { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-lt); }
+  .card-instr { font-size: 13px; line-height: 1.55; color: var(--text-mid); margin-bottom: 10px; }
+  .tip-box {
+    background: var(--tip-bg); border: 1px solid var(--tip-bd); border-radius: 8px;
+    padding: 8px 10px; margin-bottom: 8px;
+  }
+  .tip-label { font-size: 10px; color: var(--tip-label); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+  .tip-text { font-size: 12px; color: var(--tip-tx); }
+  .card-detail { font-size: 12px; color: var(--text-mid); margin-bottom: 3px; }
+  .card-detail strong { color: var(--text); }
+
+
+  .set-row { display: flex; gap: 8px; margin-top: 12px; }
+  .set-btn {
+    flex: 1; padding: 10px 0; border-radius: 10px; font-size: 13px; font-weight: 600;
+    font-family: 'Nunito Sans', sans-serif; cursor: pointer; transition: all 0.15s;
+    border: 1px solid var(--border); background: var(--input-bg); color: var(--text-lt);
+  }
+  .set-btn.done { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .set-btn:active { transform: scale(0.96); }
+
+
+  /* Pain */
+  .pain-row { display: flex; gap: 5px; }
+  .pain-btn {
+    flex: 1; padding: 9px 0; border-radius: 8px; font-size: 14px; font-weight: 600;
+    font-family: 'Nunito Sans', sans-serif; cursor: pointer; transition: all 0.15s;
+    border: 1px solid var(--border); background: var(--input-bg); color: var(--text-lt);
+  }
+  .pain-btn.sel0, .pain-btn.sel1 { background: var(--accent-lt); border-color: var(--accent-bd); color: var(--accent); }
+  .pain-btn.sel2, .pain-btn.sel3 { background: var(--warn-y-bg); border-color: #e8d6a8; color: var(--warn-y); }
+  .pain-btn.sel4, .pain-btn.sel5 { background: var(--warn-r-bg); border-color: #e8b0b0; color: var(--warn-r); }
+  .pain-btn:active { transform: scale(0.95); }
+  .pain-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-lt); margin-top: 4px; padding: 0 2px; }
+
+
+  textarea {
+    width: 100%; min-height: 60px; background: var(--input-bg); border: 1px solid var(--border);
+    border-radius: 10px; color: var(--text); font-size: 13px; font-family: 'Nunito Sans', sans-serif;
+    padding: 10px 12px; resize: vertical; outline: none;
+  }
+  textarea:focus { border-color: var(--accent-bd); }
+
+
+  .complete-banner {
+    text-align: center; padding: 18px; background: var(--done-bg); border-radius: 14px;
+    border: 1px solid var(--done-bd);
+  }
+  .complete-banner .icon { font-size: 34px; margin-bottom: 6px; }
+  .complete-banner .msg { font-size: 17px; font-weight: 700; color: var(--accent); }
+  .complete-banner .sub { font-size: 12px; color: var(--text-mid); margin-top: 3px; }
+
+
+  /* History */
+  .hist-card {
+    background: var(--white); border: 1px solid var(--border-lt); border-radius: 12px;
+    padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  .hist-top { display: flex; justify-content: space-between; align-items: center; }
+  .hist-date { font-size: 14px; font-weight: 600; color: var(--text); }
+  .hist-score { font-size: 14px; font-weight: 700; }
+  .hist-score.full { color: var(--accent); }
+  .hist-score.partial { color: var(--text-mid); }
+  .pain-badge {
+    display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px;
+    border-radius: 5px; margin-left: 8px; vertical-align: middle;
+  }
+  .pain-badge.low { color: var(--accent); background: var(--accent-lt); }
+  .pain-badge.med { color: var(--warn-y); background: var(--warn-y-bg); }
+  .pain-badge.high { color: var(--warn-r); background: var(--warn-r-bg); }
+  .hist-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .hist-bar-fill { height: 100%; border-radius: 2px; background: var(--accent-mid); }
+  .hist-bar-fill.full { background: var(--accent); }
+  .hist-note { font-size: 12px; color: var(--text-mid); font-style: italic; margin-top: 6px; }
+  .hist-exercises { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .hist-ex {
+    font-size: 11px; padding: 2px 8px; border-radius: 6px;
+    background: var(--accent-lt); color: var(--accent); font-weight: 500;
+  }
+  .hist-ex.missed { background: #f5f0ea; color: var(--text-lt); text-decoration: line-through; }
+
+
+  .empty { text-align: center; padding: 40px 20px; color: var(--text-lt); }
+  .empty .icon { font-size: 34px; margin-bottom: 10px; }
+
+
+  /* Chart */
+  .chart-card {
+    background: var(--white); border: 1px solid var(--border-lt); border-radius: 14px;
+    padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .chart-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
+  .chart-canvas { width: 100%; height: 140px; }
+
+
+  .section-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-lt);
+    font-weight: 600; margin: 16px 0 8px; padding-left: 2px;
+  }
+</style>
+</head>
+<body>
+
+
+<div id="app"></div>
+
+
+<script>
+// ===== IndexedDB Storage Layer =====
+const DB_NAME = "AnkleStrengthTracker";
+const DB_VER = 1;
+const STORE = "workouts";
+
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE)) {
+        db.createObjectStore(STORE, { keyPath: "date" });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+
+async function saveDay(date, data) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, "readwrite");
+    tx.objectStore(STORE).put({ date, ...data });
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+
+async function loadDay(date) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, "readonly");
+    const req = tx.objectStore(STORE).get(date);
+    req.onsuccess = () => resolve(req.result || null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+
+async function loadAllDays() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, "readonly");
+    const req = tx.objectStore(STORE).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+
+// ===== Exercises =====
+const EXERCISES = [
+  { id: "calf-raises", name: "Calf Raises", emoji: "🦵", sets: 2, reps: "12-15", rest: "30s",
+    instructions: "Stand flat on the ground. Rise up onto your toes as high as you can. Hold 1 second at the top. Slowly lower back down.",
+    tip: "Keep your core tight and don't rush the lowering phase.", progression: "Move to a stair edge so your heel drops below the step.", muscles: "Calves" },
+  { id: "tibialis-raises", name: "Tibialis Raises", emoji: "🦿", sets: 2, reps: "15-20", rest: "30s",
+    instructions: "Lean your back flat against a wall. Feet about 12 inches out. Lift your toes up toward your shins, then lower slowly.",
+    tip: "Feel the burn in the front of your shins. That's the target.", progression: "Add a light dumbbell on top of your foot.", muscles: "Front of shin" },
+  { id: "ankle-alphabet", name: "Ankle Alphabet", emoji: "🔤", sets: 1, reps: "A-Z each foot", rest: "—",
+    instructions: "Sit in a chair. Lift one foot. Trace each letter of the alphabet in the air using your big toe. Switch feet.",
+    tip: "Make the letters big and deliberate.", progression: "Add an ankle weight.", muscles: "Ankle stabilizers" },
+  { id: "single-leg-balance", name: "Single Leg Balance", emoji: "🧘", sets: 2, reps: "30-60s / leg", rest: "15s",
+    instructions: "Stand on one foot. Eyes forward, core engaged. Hold up to 60 seconds. Switch legs.",
+    tip: "Too easy? Close your eyes or stand on a folded towel.", progression: "Try on a pillow.", muscles: "Proprioceptors" },
+  { id: "heel-walks", name: "Heel Walks", emoji: "🚶", sets: 2, reps: "30 steps", rest: "20s",
+    instructions: "Walk forward on just your heels with toes lifted. Short, controlled steps.",
+    tip: "Arms out to the side for balance.", progression: "Increase to 50 steps.", muscles: "Dorsiflexors" },
+  { id: "toe-spreads", name: "Toe Spreads & Curls", emoji: "🦶", sets: 2, reps: "15 / foot", rest: "20s",
+    instructions: "Barefoot: spread all five toes apart wide, hold 2 sec. Curl them under like gripping the floor, hold 2 sec. That's one rep.",
+    tip: "Most people can barely spread their toes at first. It improves fast.", progression: "Do them standing on one leg.", muscles: "Foot muscles" }
+];
+const TOTAL_SETS = EXERCISES.reduce((s, e) => s + e.sets, 0);
+
+
+function todayKey() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+
+
+function fmtDate(s) {
+  const d = new Date(s + "T12:00:00");
+  const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const mos = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return days[d.getDay()] + ", " + mos[d.getMonth()] + " " + d.getDate();
+}
+
+
+function shortDate(s) {
+  const d = new Date(s + "T12:00:00");
+  return (d.getMonth()+1) + "/" + d.getDate();
+}
+
+
+// ===== App State =====
+let state = {
+  tab: "workout", // workout | progress | history
+  today: todayKey(),
+  todayData: { completed: {}, painLevel: -1, notes: "" },
+  allDays: [],
+  expanded: null,
+  saveStatus: "loading", // loading | saved | saving | error
+  loaded: false
+};
+
+
+// ===== Init =====
+async function init() {
+  try {
+    const all = await loadAllDays();
+    state.allDays = all.sort((a, b) => b.date.localeCompare(a.date));
+    const todayRec = all.find(d => d.date === state.today);
+    if (todayRec) {
+      state.todayData = {
+        completed: todayRec.completed || {},
+        painLevel: todayRec.painLevel !== undefined ? todayRec.painLevel : -1,
+        notes: todayRec.notes || ""
+      };
+    }
+    state.saveStatus = "saved";
+  } catch (e) {
+    console.error("Load failed:", e);
+    state.saveStatus = "error";
+  }
+  state.loaded = true;
+  render();
+}
+
+
+async function persistToday() {
+  state.saveStatus = "saving";
+  render();
+  try {
+    await saveDay(state.today, state.todayData);
+    // refresh allDays
+    const all = await loadAllDays();
+    state.allDays = all.sort((a, b) => b.date.localeCompare(a.date));
+    state.saveStatus = "saved";
+  } catch (e) {
+    console.error("Save error:", e);
+    state.saveStatus = "error";
+  }
+  render();
+}
+
+
+function toggleSet(exId, setIdx) {
+  const key = exId + "-s" + setIdx;
+  const c = { ...state.todayData.completed };
+  if (c[key]) { delete c[key]; } else { c[key] = Date.now(); }
+  state.todayData.completed = c;
+  persistToday();
+}
+
+
+function setPain(level) {
+  state.todayData.painLevel = level;
+  persistToday();
+}
+
+
+function setNotes(val) {
+  state.todayData.notes = val;
+  // debounce save
+  clearTimeout(setNotes._t);
+  setNotes._t = setTimeout(() => persistToday(), 800);
+}
+
+
+function isSetDone(exId, setIdx) {
+  return !!state.todayData.completed[exId + "-s" + setIdx];
+}
+
+
+function todayDone() {
+  return Object.keys(state.todayData.completed).length;
+}
+
+
+function todayPct() {
+  return TOTAL_SETS ? Math.round((todayDone() / TOTAL_SETS) * 100) : 0;
+}
+
+
+function getStreak() {
+  let count = 0;
+  const d = new Date();
+  const today = todayKey();
+  while (true) {
+    const key = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+    const rec = state.allDays.find(r => r.date === key);
+    const done = rec ? Object.keys(rec.completed || {}).length : 0;
+    if (done > 0) { count++; d.setDate(d.getDate() - 1); }
+    else if (key === today) { d.setDate(d.getDate() - 1); }
+    else { break; }
+  }
+  return count;
+}
+
+
+function dayStats(rec) {
+  const done = Object.keys(rec.completed || {}).length;
+  return { done, total: TOTAL_SETS, pct: TOTAL_SETS ? Math.round((done / TOTAL_SETS) * 100) : 0 };
+}
+
+
+// ===== Chart Drawing =====
+function drawChart(canvasId, data, color, label) {
+  requestAnimationFrame(() => {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || !data.length) return;
+    const ctx = canvas.getContext("2d");
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    const W = rect.width, H = rect.height;
+    const pad = { t: 10, r: 10, b: 24, l: 30 };
+    const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
+
+
+    const vals = data.map(d => d.value);
+    const maxV = Math.max(...vals, 1);
+    const minV = Math.min(...vals, 0);
+    const range = maxV - minV || 1;
+
+
+    ctx.clearRect(0, 0, W, H);
+
+
+    // Grid lines
+    ctx.strokeStyle = "#eee";
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 4; i++) {
+      const y = pad.t + ch - (ch * i / 4);
+      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    }
+
+
+    // Y labels
+    ctx.fillStyle = "#aaa";
+    ctx.font = "10px 'Nunito Sans', sans-serif";
+    ctx.textAlign = "right";
+    for (let i = 0; i <= 4; i++) {
+      const y = pad.t + ch - (ch * i / 4);
+      const v = minV + (range * i / 4);
+      ctx.fillText(Math.round(v), pad.l - 5, y + 3);
+    }
+
+
+    // X labels
+    ctx.textAlign = "center";
+    const step = Math.max(1, Math.floor(data.length / 6));
+    data.forEach((d, i) => {
+      if (i % step === 0 || i === data.length - 1) {
+        const x = pad.l + (cw * i / (data.length - 1 || 1));
+        ctx.fillText(d.label, x, H - 4);
+      }
+    });
+
+
+    if (data.length < 2) {
+      // Single dot
+      const x = pad.l + cw / 2;
+      const y = pad.t + ch - (ch * (vals[0] - minV) / range);
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+      return;
+    }
+
+
+    // Line
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = pad.l + (cw * i / (data.length - 1));
+      const y = pad.t + ch - (ch * (d.value - minV) / range);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+
+    // Gradient fill
+    const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + ch);
+    grad.addColorStop(0, color + "30");
+    grad.addColorStop(1, color + "05");
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    data.forEach((d, i) => {
+      const x = pad.l + (cw * i / (data.length - 1));
+      const y = pad.t + ch - (ch * (d.value - minV) / range);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.lineTo(pad.l + cw, pad.t + ch);
+    ctx.lineTo(pad.l, pad.t + ch);
+    ctx.closePath();
+    ctx.fill();
+
+
+    // Dots
+    ctx.fillStyle = color;
+    data.forEach((d, i) => {
+      const x = pad.l + (cw * i / (data.length - 1));
+      const y = pad.t + ch - (ch * (d.value - minV) / range);
+      ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+    });
+  });
+}
+
+
+// ===== Render =====
+function render() {
+  const app = document.getElementById("app");
+  if (!state.loaded) {
+    app.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--accent)"><p>Loading...</p></div>';
+    return;
+  }
+
+
+  const pct = todayPct();
+  const streak = getStreak();
+  const statusText = state.saveStatus === "saved" ? "✓ Saved to device" : state.saveStatus === "saving" ? "Saving..." : state.saveStatus === "error" ? "⚠ Save failed" : "";
+  const statusClass = state.saveStatus === "error" ? "err" : "ok";
+
+
+  let html = `
+    <div class="header">
+      <h1>Ankle Strength</h1>
+      <div class="sub">Rebuild · Strengthen · Walk Pain-Free</div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-label">Streak</div>
+          <div class="stat-val">${streak} <span>days</span></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Today</div>
+          <div class="stat-val" style="color:${pct===100?'var(--accent)':'var(--text)'}">${pct}%</div>
+          <div class="progress-track"><div class="progress-fill${pct===100?' done':''}" style="width:${pct}%"></div></div>
+        </div>
+      </div>
+      ${statusText ? `<div class="save-status ${statusClass}">${statusText}</div>` : ''}
+    </div>
+
+
+    <div class="tabs">
+      <button class="tab${state.tab==='workout'?' active':''}" onclick="switchTab('workout')">Workout</button>
+      <button class="tab${state.tab==='progress'?' active':''}" onclick="switchTab('progress')">Progress</button>
+      <button class="tab${state.tab==='history'?' active':''}" onclick="switchTab('history')">History</button>
+    </div>
+
+
+    <div class="content">
+  `;
+
+
+  if (state.tab === "workout") {
+    html += renderWorkout(pct);
+  } else if (state.tab === "progress") {
+    html += renderProgress();
+  } else {
+    html += renderHistory();
+  }
+
+
+  html += '</div>';
+  app.innerHTML = html;
+
+
+  // Draw charts after DOM update
+  if (state.tab === "progress") {
+    const sorted = [...state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
+    if (sorted.length > 0) {
+      const compData = sorted.map(d => ({
+        label: shortDate(d.date),
+        value: Math.round((Object.keys(d.completed || {}).length / TOTAL_SETS) * 100)
+      }));
+      drawChart("chart-completion", compData, "#2d6a5a", "Completion %");
+
+
+      const painData = sorted.filter(d => d.painLevel !== undefined && d.painLevel >= 0).map(d => ({
+        label: shortDate(d.date),
+        value: d.painLevel
+      }));
+      if (painData.length > 0) {
+        drawChart("chart-pain", painData, "#c45050", "Pain Level");
+      }
+    }
+  }
+}
+
+
+function renderWorkout(pct) {
+  let html = '';
+
+
+  EXERCISES.forEach(ex => {
+    const allDone = Array.from({length: ex.sets}, (_, s) => isSetDone(ex.id, s)).every(Boolean);
+    const isOpen = state.expanded === ex.id;
+
+
+    html += `<div class="card${allDone?' done':''}">
+      <div class="card-head" onclick="toggleExpand('${ex.id}')">
+        <span class="card-emoji">${ex.emoji}</span>
+        <div class="card-info">
+          <div class="card-name">${ex.name}</div>
+          <div class="card-meta">${ex.sets} sets × ${ex.reps} · Rest ${ex.rest}</div>
+        </div>
+        <span class="card-arrow${isOpen?' open':''}">▾</span>
+      </div>`;
+
+
+    if (isOpen) {
+      html += `<div class="card-body">
+        <div class="card-instr">${ex.instructions}</div>
+        <div class="tip-box">
+          <span class="tip-label">Tip: </span>
+          <span class="tip-text">${ex.tip}</span>
+        </div>
+        <div class="card-detail"><strong>Target:</strong> ${ex.muscles}</div>
+        <div class="card-detail"><strong>Next level:</strong> ${ex.progression}</div>
+      </div>`;
+    }
+
+
+    html += '<div class="set-row">';
+    for (let s = 0; s < ex.sets; s++) {
+      const done = isSetDone(ex.id, s);
+      html += `<button class="set-btn${done?' done':''}" onclick="toggleSet('${ex.id}',${s})">${done?'✓ ':''}Set ${s+1}</button>`;
+    }
+    html += '</div></div>';
+  });
+
+
+  // Pain level
+  html += `<div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">Ankle Pain Level Today</div>
+    <div class="pain-row">`;
+  for (let i = 0; i <= 5; i++) {
+    const sel = state.todayData.painLevel === i;
+    html += `<button class="pain-btn${sel?' sel'+i:''}" onclick="setPain(${i})">${i}</button>`;
+  }
+  html += `</div>
+    <div class="pain-labels"><span>None</span><span>Severe</span></div>
+  </div>`;
+
+
+  // Notes
+  html += `<div class="card">
+    <div style="font-size:14px;font-weight:600;margin-bottom:8px">Notes</div>
+    <textarea id="notes-input" oninput="setNotes(this.value)" placeholder="How did it feel today?">${escHtml(state.todayData.notes)}</textarea>
+  </div>`;
+
+
+  // Complete banner
+  if (pct === 100) {
+    html += `<div class="complete-banner">
+      <div class="icon">🎉</div>
+      <div class="msg">Workout Complete!</div>
+      <div class="sub">Your ankles thank you. See you tomorrow.</div>
+    </div>`;
+  }
+
+
+  return html;
+}
+
+
+function renderProgress() {
+  const sorted = [...state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
+
+
+  if (sorted.length === 0) {
+    return `<div class="empty"><div class="icon">📊</div><div>Complete your first workout to see progress charts.</div></div>`;
+  }
+
+
+  // Summary stats
+  const totalWorkouts = state.allDays.length;
+  const fullWorkouts = state.allDays.filter(d => Object.keys(d.completed || {}).length === TOTAL_SETS).length;
+  const avgPain = state.allDays.filter(d => d.painLevel >= 0);
+  const avgPainVal = avgPain.length ? (avgPain.reduce((s, d) => s + d.painLevel, 0) / avgPain.length).toFixed(1) : "—";
+
+
+  // Recent vs earlier pain comparison
+  let painTrend = "";
+  if (avgPain.length >= 4) {
+    const half = Math.floor(avgPain.length / 2);
+    const earlier = avgPain.slice(0, half);
+    const recent = avgPain.slice(half);
+    const earlyAvg = earlier.reduce((s, d) => s + d.painLevel, 0) / earlier.length;
+    const recentAvg = recent.reduce((s, d) => s + d.painLevel, 0) / recent.length;
+    const diff = earlyAvg - recentAvg;
+    if (diff > 0.3) painTrend = "↓ Improving";
+    else if (diff < -0.3) painTrend = "↑ Worsening";
+    else painTrend = "→ Stable";
+  }
+
+
+  let html = `
+    <div class="section-label">Summary</div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <div class="stat-box" style="flex:1">
+        <div class="stat-label">Workouts</div>
+        <div class="stat-val" style="font-size:22px">${totalWorkouts}</div>
+      </div>
+      <div class="stat-box" style="flex:1">
+        <div class="stat-label">100% Days</div>
+        <div class="stat-val" style="font-size:22px">${fullWorkouts}</div>
+      </div>
+      <div class="stat-box" style="flex:1">
+        <div class="stat-label">Avg Pain</div>
+        <div class="stat-val" style="font-size:22px">${avgPainVal}</div>
+        ${painTrend ? `<div style="font-size:10px;color:${painTrend.includes('Improving')?'var(--accent)':painTrend.includes('Worsening')?'var(--warn-r)':'var(--text-lt)'};margin-top:2px">${painTrend}</div>` : ''}
+      </div>
+    </div>
+
+
+    <div class="section-label">Completion % (Last 30 days)</div>
+    <div class="chart-card">
+      <canvas id="chart-completion" class="chart-canvas"></canvas>
+    </div>
+
+
+    <div class="section-label">Pain Level Over Time</div>
+    <div class="chart-card">
+      <canvas id="chart-pain" class="chart-canvas"></canvas>
+    </div>
+  `;
+
+
+  // Per-exercise completion rates
+  html += `<div class="section-label">Exercise Completion Rate</div><div class="card">`;
+  EXERCISES.forEach(ex => {
+    let exDone = 0, exTotal = 0;
+    state.allDays.forEach(d => {
+      for (let s = 0; s < ex.sets; s++) {
+        exTotal++;
+        if (d.completed && d.completed[ex.id + "-s" + s]) exDone++;
+      }
+    });
+    const rate = exTotal ? Math.round((exDone / exTotal) * 100) : 0;
+    html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:20px">${ex.emoji}</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;margin-bottom:3px">${ex.name}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${rate}%"></div></div>
+      </div>
+      <span style="font-size:13px;font-weight:700;color:${rate>=80?'var(--accent)':'var(--text-mid)'}">${rate}%</span>
+    </div>`;
+  });
+  html += '</div>';
+
+
+  return html;
+}
+
+
+function renderHistory() {
+  const days = state.allDays.filter(d => Object.keys(d.completed || {}).length > 0);
+
+
+  if (days.length === 0) {
+    return `<div class="empty"><div class="icon">📋</div><div>No workouts logged yet.</div><div style="font-size:13px;margin-top:4px">Complete today's workout to start tracking!</div></div>`;
+  }
+
+
+  let html = '<div class="section-label">Workout Log</div>';
+
+
+  days.forEach(rec => {
+    const stats = dayStats(rec);
+    const isToday = rec.date === state.today;
+    const painLvl = rec.painLevel !== undefined && rec.painLevel >= 0 ? rec.painLevel : -1;
+    let painBadge = "";
+    if (painLvl >= 0) {
+      const cls = painLvl <= 1 ? "low" : painLvl <= 3 ? "med" : "high";
+      painBadge = `<span class="pain-badge ${cls}">Pain: ${painLvl}/5</span>`;
+    }
+
+
+    html += `<div class="hist-card">
+      <div class="hist-top">
+        <div>
+          <span class="hist-date">${isToday ? 'Today' : fmtDate(rec.date)}</span>
+          ${painBadge}
+        </div>
+        <span class="hist-score ${stats.pct===100?'full':'partial'}">${stats.pct===100?'✓ ':''}${stats.done}/${stats.total}</span>
+      </div>
+      <div class="hist-bar"><div class="hist-bar-fill${stats.pct===100?' full':''}" style="width:${stats.pct}%"></div></div>
+      <div class="hist-exercises">`;
+
+
+    EXERCISES.forEach(ex => {
+      const exDone = Array.from({length: ex.sets}, (_, s) => !!(rec.completed && rec.completed[ex.id + "-s" + s])).every(Boolean);
+      html += `<span class="hist-ex${exDone?'':' missed'}">${ex.emoji} ${ex.name}</span>`;
+    });
+
+
+    html += '</div>';
+    if (rec.notes) {
+      html += `<div class="hist-note">"${escHtml(rec.notes)}"</div>`;
+    }
+    html += '</div>';
+  });
+
+
+  return html;
+}
+
+
+function escHtml(s) {
+  if (!s) return "";
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+
+// ===== Global handlers =====
+window.switchTab = function(t) { state.tab = t; render(); };
+window.toggleExpand = function(id) { state.expanded = state.expanded === id ? null : id; render(); };
+window.toggleSet = toggleSet;
+window.setPain = setPain;
+window.setNotes = setNotes;
+
+
+// Start
+init();
+</script>
+</body>
+</html>
