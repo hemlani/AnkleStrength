@@ -1,5 +1,5 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -55,149 +55,178 @@
   .save-status.ok { background: var(--done-bg); color: var(--done-tx); }
   .save-status.err { background: var(--warn-r-bg); color: var(--warn-r); }
 
+.tabs { display: flex; padding: 12px 20px 0; gap: 6px; }
+.tab {
+flex: 1; padding: 9px 0; border-radius: 10px; border: 1px solid var(–border);
+background: transparent; color: var(–text-lt); font-size: 12px; font-weight: 600;
+font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
+transition: all 0.2s;
+}
+.tab.active { background: var(–accent-lt); border-color: var(–accent-bd); color: var(–accent); }
 
-  /* Tabs */
-  .tabs { display: flex; padding: 12px 20px 0; gap: 6px; }
-  .tab {
-    flex: 1; padding: 9px 0; border-radius: 10px; border: 1px solid var(--border);
-    background: transparent; color: var(--text-lt); font-size: 12px; font-weight: 600;
-    font-family: 'Nunito Sans', sans-serif; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-    transition: all 0.2s;
-  }
-  .tab.active { background: var(--accent-lt); border-color: var(--accent-bd); color: var(--accent); }
+.content { padding: 14px 20px 100px; }
+.card {
+background: var(–white); border: 1px solid var(–border-lt); border-radius: 14px;
+padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+transition: all 0.3s;
+}
+.card.done { background: var(–done-bg); border-color: var(–done-bd); box-shadow: none; }
+.card-head { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.card-emoji { font-size: 26px; }
+.card-info { flex: 1; }
+.card-name { font-size: 15px; font-weight: 600; color: var(–text); transition: all 0.2s; }
+.card.done .card-name { color: var(–done-tx); text-decoration: line-through; opacity: 0.6; }
+.card-meta { font-size: 11px; color: var(–text-mid); margin-top: 1px; }
+.card-arrow { font-size: 16px; color: var(–text-lt); transition: transform 0.2s; }
+.card-arrow.open { transform: rotate(180deg); }
 
+.card-body { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(–border-lt); }
+.card-instr { font-size: 13px; line-height: 1.55; color: var(–text-mid); margin-bottom: 10px; }
+.tip-box {
+background: var(–tip-bg); border: 1px solid var(–tip-bd); border-radius: 8px;
+padding: 8px 10px; margin-bottom: 8px;
+}
+.tip-label { font-size: 10px; color: var(–tip-label); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+.tip-text { font-size: 12px; color: var(–tip-tx); }
+.card-detail { font-size: 12px; color: var(–text-mid); margin-bottom: 3px; }
+.card-detail strong { color: var(–text); }
 
-  /* Cards */
-  .content { padding: 14px 20px 100px; }
-  .card {
-    background: var(--white); border: 1px solid var(--border-lt); border-radius: 14px;
-    padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    transition: all 0.3s;
-  }
-  .card.done { background: var(--done-bg); border-color: var(--done-bd); box-shadow: none; }
-  .card-head { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-  .card-emoji { font-size: 26px; }
-  .card-info { flex: 1; }
-  .card-name { font-size: 15px; font-weight: 600; color: var(--text); transition: all 0.2s; }
-  .card.done .card-name { color: var(--done-tx); text-decoration: line-through; opacity: 0.6; }
-  .card-meta { font-size: 11px; color: var(--text-mid); margin-top: 1px; }
-  .card-arrow { font-size: 16px; color: var(--text-lt); transition: transform 0.2s; }
-  .card-arrow.open { transform: rotate(180deg); }
+.set-row { display: flex; gap: 8px; margin-top: 12px; }
+.set-btn {
+flex: 1; padding: 10px 0; border-radius: 10px; font-size: 13px; font-weight: 600;
+font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; transition: all 0.15s;
+border: 1px solid var(–border); background: var(–input-bg); color: var(–text-lt);
+}
+.set-btn.done { background: var(–accent); border-color: var(–accent); color: #fff; }
+.set-btn:active { transform: scale(0.96); }
 
+.pain-row { display: flex; gap: 5px; }
+.pain-btn {
+flex: 1; padding: 9px 0; border-radius: 8px; font-size: 14px; font-weight: 600;
+font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; transition: all 0.15s;
+border: 1px solid var(–border); background: var(–input-bg); color: var(–text-lt);
+}
+.pain-btn.sel0, .pain-btn.sel1 { background: var(–accent-lt); border-color: var(–accent-bd); color: var(–accent); }
+.pain-btn.sel2, .pain-btn.sel3 { background: var(–warn-y-bg); border-color: #e8d6a8; color: var(–warn-y); }
+.pain-btn.sel4, .pain-btn.sel5 { background: var(–warn-r-bg); border-color: #e8b0b0; color: var(–warn-r); }
+.pain-btn:active { transform: scale(0.95); }
+.pain-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(–text-lt); margin-top: 4px; padding: 0 2px; }
 
-  .card-body { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-lt); }
-  .card-instr { font-size: 13px; line-height: 1.55; color: var(--text-mid); margin-bottom: 10px; }
-  .tip-box {
-    background: var(--tip-bg); border: 1px solid var(--tip-bd); border-radius: 8px;
-    padding: 8px 10px; margin-bottom: 8px;
-  }
-  .tip-label { font-size: 10px; color: var(--tip-label); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-  .tip-text { font-size: 12px; color: var(--tip-tx); }
-  .card-detail { font-size: 12px; color: var(--text-mid); margin-bottom: 3px; }
-  .card-detail strong { color: var(--text); }
+textarea {
+width: 100%; min-height: 60px; background: var(–input-bg); border: 1px solid var(–border);
+border-radius: 10px; color: var(–text); font-size: 13px; font-family: ‘Nunito Sans’, sans-serif;
+padding: 10px 12px; resize: vertical; outline: none;
+}
+textarea:focus { border-color: var(–accent-bd); }
 
+.complete-banner {
+text-align: center; padding: 18px; background: var(–done-bg); border-radius: 14px;
+border: 1px solid var(–done-bd);
+}
+.complete-banner .icon { font-size: 34px; margin-bottom: 6px; }
+.complete-banner .msg { font-size: 17px; font-weight: 700; color: var(–accent); }
+.complete-banner .sub { font-size: 12px; color: var(–text-mid); margin-top: 3px; }
 
-  .set-row { display: flex; gap: 8px; margin-top: 12px; }
-  .set-btn {
-    flex: 1; padding: 10px 0; border-radius: 10px; font-size: 13px; font-weight: 600;
-    font-family: 'Nunito Sans', sans-serif; cursor: pointer; transition: all 0.15s;
-    border: 1px solid var(--border); background: var(--input-bg); color: var(--text-lt);
-  }
-  .set-btn.done { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .set-btn:active { transform: scale(0.96); }
+.hist-card {
+background: var(–white); border: 1px solid var(–border-lt); border-radius: 12px;
+padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.hist-top { display: flex; justify-content: space-between; align-items: center; }
+.hist-date { font-size: 14px; font-weight: 600; color: var(–text); }
+.hist-score { font-size: 14px; font-weight: 700; }
+.hist-score.full { color: var(–accent); }
+.hist-score.partial { color: var(–text-mid); }
+.pain-badge {
+display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px;
+border-radius: 5px; margin-left: 8px; vertical-align: middle;
+}
+.pain-badge.low { color: var(–accent); background: var(–accent-lt); }
+.pain-badge.med { color: var(–warn-y); background: var(–warn-y-bg); }
+.pain-badge.high { color: var(–warn-r); background: var(–warn-r-bg); }
+.hist-bar { height: 3px; background: var(–border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.hist-bar-fill { height: 100%; border-radius: 2px; background: var(–accent-mid); }
+.hist-bar-fill.full { background: var(–accent); }
+.hist-note { font-size: 12px; color: var(–text-mid); font-style: italic; margin-top: 6px; }
+.hist-exercises { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
+.hist-ex {
+font-size: 11px; padding: 2px 8px; border-radius: 6px;
+background: var(–accent-lt); color: var(–accent); font-weight: 500;
+}
+.hist-ex.missed { background: #f5f0ea; color: var(–text-lt); text-decoration: line-through; }
+.hist-rounds { font-size: 11px; color: var(–accent-mid); font-weight: 600; margin-top: 4px; }
 
+.empty { text-align: center; padding: 40px 20px; color: var(–text-lt); }
+.empty .icon { font-size: 34px; margin-bottom: 10px; }
 
-  /* Pain */
-  .pain-row { display: flex; gap: 5px; }
-  .pain-btn {
-    flex: 1; padding: 9px 0; border-radius: 8px; font-size: 14px; font-weight: 600;
-    font-family: 'Nunito Sans', sans-serif; cursor: pointer; transition: all 0.15s;
-    border: 1px solid var(--border); background: var(--input-bg); color: var(--text-lt);
-  }
-  .pain-btn.sel0, .pain-btn.sel1 { background: var(--accent-lt); border-color: var(--accent-bd); color: var(--accent); }
-  .pain-btn.sel2, .pain-btn.sel3 { background: var(--warn-y-bg); border-color: #e8d6a8; color: var(--warn-y); }
-  .pain-btn.sel4, .pain-btn.sel5 { background: var(--warn-r-bg); border-color: #e8b0b0; color: var(--warn-r); }
-  .pain-btn:active { transform: scale(0.95); }
-  .pain-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-lt); margin-top: 4px; padding: 0 2px; }
+.chart-card {
+background: var(–white); border: 1px solid var(–border-lt); border-radius: 14px;
+padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.chart-canvas { width: 100%; height: 140px; }
 
+.section-label {
+font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(–text-lt);
+font-weight: 600; margin: 16px 0 8px; padding-left: 2px;
+}
 
-  textarea {
-    width: 100%; min-height: 60px; background: var(--input-bg); border: 1px solid var(--border);
-    border-radius: 10px; color: var(--text); font-size: 13px; font-family: 'Nunito Sans', sans-serif;
-    padding: 10px 12px; resize: vertical; outline: none;
-  }
-  textarea:focus { border-color: var(--accent-bd); }
+/* Date picker row */
+.date-row {
+display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+background: var(–white); border: 1px solid var(–border-lt); border-radius: 12px;
+padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.date-row label { font-size: 13px; font-weight: 600; color: var(–text); white-space: nowrap; }
+.date-input {
+flex: 1; font-size: 14px; font-family: ‘Nunito Sans’, sans-serif;
+border: 1px solid var(–border); border-radius: 8px; padding: 8px 10px;
+background: var(–input-bg); color: var(–text); outline: none;
+-webkit-appearance: none;
+}
+.date-input:focus { border-color: var(–accent-bd); }
+.date-today-btn {
+padding: 8px 12px; border-radius: 8px; border: 1px solid var(–accent-bd);
+background: var(–accent-lt); color: var(–accent); font-size: 12px; font-weight: 600;
+font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; white-space: nowrap;
+}
+.date-today-btn:active { transform: scale(0.96); }
+.date-past-note {
+font-size: 11px; color: var(–warn-y); background: var(–warn-y-bg);
+padding: 4px 10px; border-radius: 6px; margin-bottom: 10px; display: inline-block;
+}
 
-
-  .complete-banner {
-    text-align: center; padding: 18px; background: var(--done-bg); border-radius: 14px;
-    border: 1px solid var(--done-bd);
-  }
-  .complete-banner .icon { font-size: 34px; margin-bottom: 6px; }
-  .complete-banner .msg { font-size: 17px; font-weight: 700; color: var(--accent); }
-  .complete-banner .sub { font-size: 12px; color: var(--text-mid); margin-top: 3px; }
-
-
-  /* History */
-  .hist-card {
-    background: var(--white); border: 1px solid var(--border-lt); border-radius: 12px;
-    padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-  }
-  .hist-top { display: flex; justify-content: space-between; align-items: center; }
-  .hist-date { font-size: 14px; font-weight: 600; color: var(--text); }
-  .hist-score { font-size: 14px; font-weight: 700; }
-  .hist-score.full { color: var(--accent); }
-  .hist-score.partial { color: var(--text-mid); }
-  .pain-badge {
-    display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px;
-    border-radius: 5px; margin-left: 8px; vertical-align: middle;
-  }
-  .pain-badge.low { color: var(--accent); background: var(--accent-lt); }
-  .pain-badge.med { color: var(--warn-y); background: var(--warn-y-bg); }
-  .pain-badge.high { color: var(--warn-r); background: var(--warn-r-bg); }
-  .hist-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
-  .hist-bar-fill { height: 100%; border-radius: 2px; background: var(--accent-mid); }
-  .hist-bar-fill.full { background: var(--accent); }
-  .hist-note { font-size: 12px; color: var(--text-mid); font-style: italic; margin-top: 6px; }
-  .hist-exercises { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
-  .hist-ex {
-    font-size: 11px; padding: 2px 8px; border-radius: 6px;
-    background: var(--accent-lt); color: var(--accent); font-weight: 500;
-  }
-  .hist-ex.missed { background: #f5f0ea; color: var(--text-lt); text-decoration: line-through; }
-
-
-  .empty { text-align: center; padding: 40px 20px; color: var(--text-lt); }
-  .empty .icon { font-size: 34px; margin-bottom: 10px; }
-
-
-  /* Chart */
-  .chart-card {
-    background: var(--white); border: 1px solid var(--border-lt); border-radius: 14px;
-    padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-  }
-  .chart-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 12px; }
-  .chart-canvas { width: 100%; height: 140px; }
-
-
-  .section-label {
-    font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--text-lt);
-    font-weight: 600; margin: 16px 0 8px; padding-left: 2px;
-  }
+/* Round selector */
+.round-row {
+display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+background: var(–white); border: 1px solid var(–border-lt); border-radius: 12px;
+padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+.round-label { font-size: 13px; font-weight: 600; color: var(–text); white-space: nowrap; }
+.round-tabs { display: flex; gap: 4px; flex: 1; }
+.round-tab {
+padding: 6px 12px; border-radius: 8px; border: 1px solid var(–border);
+background: var(–input-bg); color: var(–text-lt); font-size: 12px; font-weight: 600;
+font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; transition: all 0.15s;
+}
+.round-tab.active { background: var(–accent); border-color: var(–accent); color: #fff; }
+.round-tab:active { transform: scale(0.95); }
+.round-add {
+padding: 6px 10px; border-radius: 8px; border: 1px dashed var(–accent-bd);
+background: transparent; color: var(–accent); font-size: 14px; font-weight: 700;
+font-family: ‘Nunito Sans’, sans-serif; cursor: pointer;
+}
+.round-add:active { transform: scale(0.95); }
 </style>
+
 </head>
 <body>
 
-
 <div id="app"></div>
 
-
 <script>
-// ===== IndexedDB Storage Layer =====
-const DB_NAME = "AnkleStrengthTracker";
-const DB_VER = 1;
+// ===== IndexedDB =====
+const DB_NAME = "AnkleStrengthDB";
+const DB_VER = 2;
 const STORE = "workouts";
-
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -213,7 +242,6 @@ function openDB() {
   });
 }
 
-
 async function saveDay(date, data) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -223,7 +251,6 @@ async function saveDay(date, data) {
     tx.onerror = () => reject(tx.error);
   });
 }
-
 
 async function loadDay(date) {
   const db = await openDB();
@@ -235,7 +262,6 @@ async function loadDay(date) {
   });
 }
 
-
 async function loadAllDays() {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -245,7 +271,6 @@ async function loadAllDays() {
     req.onerror = () => reject(req.error);
   });
 }
-
 
 // ===== Exercises =====
 const EXERCISES = [
@@ -270,12 +295,10 @@ const EXERCISES = [
 ];
 const TOTAL_SETS = EXERCISES.reduce((s, e) => s + e.sets, 0);
 
-
 function todayKey() {
   const d = new Date();
   return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
 }
-
 
 function fmtDate(s) {
   const d = new Date(s + "T12:00:00");
@@ -284,38 +307,61 @@ function fmtDate(s) {
   return days[d.getDay()] + ", " + mos[d.getMonth()] + " " + d.getDate();
 }
 
-
 function shortDate(s) {
   const d = new Date(s + "T12:00:00");
   return (d.getMonth()+1) + "/" + d.getDate();
 }
 
-
-// ===== App State =====
+// ===== State =====
 let state = {
-  tab: "workout", // workout | progress | history
-  today: todayKey(),
-  todayData: { completed: {}, painLevel: -1, notes: "" },
+  tab: "workout",
+  selectedDate: todayKey(),
+  currentRound: 1,
+  dayData: null, // { rounds: { 1: {completed:{}, painLevel:-1, notes:""}, 2: {...} } }
   allDays: [],
   expanded: null,
-  saveStatus: "loading", // loading | saved | saving | error
+  saveStatus: "loading",
   loaded: false
 };
 
+function emptyRound() {
+  return { completed: {}, painLevel: -1, notes: "" };
+}
+
+function emptyDay() {
+  return { rounds: { 1: emptyRound() } };
+}
+
+function getCurrentRoundData() {
+  if (!state.dayData) return emptyRound();
+  return state.dayData.rounds[state.currentRound] || emptyRound();
+}
+
+function getRoundCount() {
+  if (!state.dayData) return 1;
+  return Object.keys(state.dayData.rounds).length;
+}
+
+function getTotalSetsForDay(rec) {
+  if (!rec || !rec.rounds) return 0;
+  let total = 0;
+  Object.values(rec.rounds).forEach(r => {
+    total += Object.keys(r.completed || {}).length;
+  });
+  return total;
+}
+
+function getTotalRoundsForDay(rec) {
+  if (!rec || !rec.rounds) return 0;
+  return Object.keys(rec.rounds).length;
+}
 
 // ===== Init =====
 async function init() {
   try {
     const all = await loadAllDays();
     state.allDays = all.sort((a, b) => b.date.localeCompare(a.date));
-    const todayRec = all.find(d => d.date === state.today);
-    if (todayRec) {
-      state.todayData = {
-        completed: todayRec.completed || {},
-        painLevel: todayRec.painLevel !== undefined ? todayRec.painLevel : -1,
-        notes: todayRec.notes || ""
-      };
-    }
+    await loadSelectedDay();
     state.saveStatus = "saved";
   } catch (e) {
     console.error("Load failed:", e);
@@ -325,13 +371,27 @@ async function init() {
   render();
 }
 
+async function loadSelectedDay() {
+  const rec = await loadDay(state.selectedDate);
+  if (rec && rec.rounds) {
+    state.dayData = { rounds: rec.rounds };
+  } else if (rec && rec.completed) {
+    // Migrate old format
+    state.dayData = { rounds: { 1: { completed: rec.completed, painLevel: rec.painLevel !== undefined ? rec.painLevel : -1, notes: rec.notes || "" } } };
+  } else {
+    state.dayData = emptyDay();
+  }
+  // Ensure current round exists
+  if (!state.dayData.rounds[state.currentRound]) {
+    state.currentRound = 1;
+  }
+}
 
-async function persistToday() {
+async function persistDay() {
   state.saveStatus = "saving";
-  render();
+  renderStatusOnly();
   try {
-    await saveDay(state.today, state.todayData);
-    // refresh allDays
+    await saveDay(state.selectedDate, state.dayData);
     const all = await loadAllDays();
     state.allDays = all.sort((a, b) => b.date.localeCompare(a.date));
     state.saveStatus = "saved";
@@ -339,47 +399,85 @@ async function persistToday() {
     console.error("Save error:", e);
     state.saveStatus = "error";
   }
+  renderStatusOnly();
+}
+
+function renderStatusOnly() {
+  const el = document.getElementById("save-indicator");
+  if (el) {
+    const txt = state.saveStatus === "saved" ? "✓ Saved" : state.saveStatus === "saving" ? "Saving..." : "⚠ Error";
+    const cls = state.saveStatus === "error" ? "err" : "ok";
+    el.className = "save-status " + cls;
+    el.textContent = txt;
+  }
+}
+
+// ===== Actions =====
+function toggleSet(exId, setIdx) {
+  const rd = getCurrentRoundData();
+  const key = exId + "-s" + setIdx;
+  const c = { ...rd.completed };
+  if (c[key]) { delete c[key]; } else { c[key] = Date.now(); }
+  rd.completed = c;
+  state.dayData.rounds[state.currentRound] = rd;
+  persistDay();
   render();
 }
 
-
-function toggleSet(exId, setIdx) {
-  const key = exId + "-s" + setIdx;
-  const c = { ...state.todayData.completed };
-  if (c[key]) { delete c[key]; } else { c[key] = Date.now(); }
-  state.todayData.completed = c;
-  persistToday();
+function setPainLevel(level) {
+  const rd = getCurrentRoundData();
+  rd.painLevel = level;
+  state.dayData.rounds[state.currentRound] = rd;
+  persistDay();
+  render();
 }
-
-
-function setPain(level) {
-  state.todayData.painLevel = level;
-  persistToday();
-}
-
 
 function setNotes(val) {
-  state.todayData.notes = val;
-  // debounce save
+  const rd = getCurrentRoundData();
+  rd.notes = val;
+  state.dayData.rounds[state.currentRound] = rd;
   clearTimeout(setNotes._t);
-  setNotes._t = setTimeout(() => persistToday(), 800);
+  setNotes._t = setTimeout(() => persistDay(), 800);
 }
 
+function addRound() {
+  const next = getRoundCount() + 1;
+  state.dayData.rounds[next] = emptyRound();
+  state.currentRound = next;
+  persistDay();
+  render();
+}
+
+function switchRound(r) {
+  state.currentRound = r;
+  render();
+}
+
+async function changeDate(dateStr) {
+  state.selectedDate = dateStr;
+  state.currentRound = 1;
+  await loadSelectedDay();
+  render();
+}
+
+function goToToday() {
+  const inp = document.getElementById("date-picker");
+  if (inp) inp.value = todayKey();
+  changeDate(todayKey());
+}
 
 function isSetDone(exId, setIdx) {
-  return !!state.todayData.completed[exId + "-s" + setIdx];
+  const rd = getCurrentRoundData();
+  return !!rd.completed[exId + "-s" + setIdx];
 }
 
-
-function todayDone() {
-  return Object.keys(state.todayData.completed).length;
+function roundDone() {
+  return Object.keys(getCurrentRoundData().completed).length;
 }
 
-
-function todayPct() {
-  return TOTAL_SETS ? Math.round((todayDone() / TOTAL_SETS) * 100) : 0;
+function roundPct() {
+  return TOTAL_SETS ? Math.round((roundDone() / TOTAL_SETS) * 100) : 0;
 }
-
 
 function getStreak() {
   let count = 0;
@@ -388,23 +486,16 @@ function getStreak() {
   while (true) {
     const key = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
     const rec = state.allDays.find(r => r.date === key);
-    const done = rec ? Object.keys(rec.completed || {}).length : 0;
-    if (done > 0) { count++; d.setDate(d.getDate() - 1); }
+    const has = rec ? getTotalSetsForDay(rec) > 0 : false;
+    if (has) { count++; d.setDate(d.getDate() - 1); }
     else if (key === today) { d.setDate(d.getDate() - 1); }
     else { break; }
   }
   return count;
 }
 
-
-function dayStats(rec) {
-  const done = Object.keys(rec.completed || {}).length;
-  return { done, total: TOTAL_SETS, pct: TOTAL_SETS ? Math.round((done / TOTAL_SETS) * 100) : 0 };
-}
-
-
-// ===== Chart Drawing =====
-function drawChart(canvasId, data, color, label) {
+// ===== Chart =====
+function drawChart(canvasId, data, color) {
   requestAnimationFrame(() => {
     const canvas = document.getElementById(canvasId);
     if (!canvas || !data.length) return;
@@ -417,38 +508,22 @@ function drawChart(canvasId, data, color, label) {
     const W = rect.width, H = rect.height;
     const pad = { t: 10, r: 10, b: 24, l: 30 };
     const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
-
-
     const vals = data.map(d => d.value);
     const maxV = Math.max(...vals, 1);
     const minV = Math.min(...vals, 0);
     const range = maxV - minV || 1;
 
-
     ctx.clearRect(0, 0, W, H);
-
-
-    // Grid lines
-    ctx.strokeStyle = "#eee";
-    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = "#eee"; ctx.lineWidth = 0.5;
     for (let i = 0; i <= 4; i++) {
       const y = pad.t + ch - (ch * i / 4);
       ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
     }
-
-
-    // Y labels
-    ctx.fillStyle = "#aaa";
-    ctx.font = "10px 'Nunito Sans', sans-serif";
-    ctx.textAlign = "right";
+    ctx.fillStyle = "#aaa"; ctx.font = "10px 'Nunito Sans', sans-serif"; ctx.textAlign = "right";
     for (let i = 0; i <= 4; i++) {
       const y = pad.t + ch - (ch * i / 4);
-      const v = minV + (range * i / 4);
-      ctx.fillText(Math.round(v), pad.l - 5, y + 3);
+      ctx.fillText(Math.round(minV + (range * i / 4)), pad.l - 5, y + 3);
     }
-
-
-    // X labels
     ctx.textAlign = "center";
     const step = Math.max(1, Math.floor(data.length / 6));
     data.forEach((d, i) => {
@@ -457,49 +532,27 @@ function drawChart(canvasId, data, color, label) {
         ctx.fillText(d.label, x, H - 4);
       }
     });
-
-
     if (data.length < 2) {
-      // Single dot
-      const x = pad.l + cw / 2;
-      const y = pad.t + ch - (ch * (vals[0] - minV) / range);
-      ctx.fillStyle = color;
-      ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+      const x = pad.l + cw / 2, y = pad.t + ch - (ch * (vals[0] - minV) / range);
+      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
       return;
     }
-
-
-    // Line
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.lineJoin = "round";
-    ctx.beginPath();
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.beginPath();
     data.forEach((d, i) => {
       const x = pad.l + (cw * i / (data.length - 1));
       const y = pad.t + ch - (ch * (d.value - minV) / range);
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
     ctx.stroke();
-
-
-    // Gradient fill
     const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + ch);
-    grad.addColorStop(0, color + "30");
-    grad.addColorStop(1, color + "05");
-    ctx.fillStyle = grad;
-    ctx.beginPath();
+    grad.addColorStop(0, color + "30"); grad.addColorStop(1, color + "05");
+    ctx.fillStyle = grad; ctx.beginPath();
     data.forEach((d, i) => {
       const x = pad.l + (cw * i / (data.length - 1));
       const y = pad.t + ch - (ch * (d.value - minV) / range);
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     });
-    ctx.lineTo(pad.l + cw, pad.t + ch);
-    ctx.lineTo(pad.l, pad.t + ch);
-    ctx.closePath();
-    ctx.fill();
-
-
-    // Dots
+    ctx.lineTo(pad.l + cw, pad.t + ch); ctx.lineTo(pad.l, pad.t + ch); ctx.closePath(); ctx.fill();
     ctx.fillStyle = color;
     data.forEach((d, i) => {
       const x = pad.l + (cw * i / (data.length - 1));
@@ -509,7 +562,6 @@ function drawChart(canvasId, data, color, label) {
   });
 }
 
-
 // ===== Render =====
 function render() {
   const app = document.getElementById("app");
@@ -518,12 +570,12 @@ function render() {
     return;
   }
 
-
-  const pct = todayPct();
+  const pct = roundPct();
   const streak = getStreak();
-  const statusText = state.saveStatus === "saved" ? "✓ Saved to device" : state.saveStatus === "saving" ? "Saving..." : state.saveStatus === "error" ? "⚠ Save failed" : "";
+  const isToday = state.selectedDate === todayKey();
+  const statusText = state.saveStatus === "saved" ? "✓ Saved" : state.saveStatus === "saving" ? "Saving..." : "⚠ Error";
   const statusClass = state.saveStatus === "error" ? "err" : "ok";
-
+  const roundCount = getRoundCount();
 
   let html = `
     <div class="header">
@@ -535,14 +587,13 @@ function render() {
           <div class="stat-val">${streak} <span>days</span></div>
         </div>
         <div class="stat-box">
-          <div class="stat-label">Today</div>
+          <div class="stat-label">${isToday ? 'Today' : fmtDate(state.selectedDate)} · R${state.currentRound}</div>
           <div class="stat-val" style="color:${pct===100?'var(--accent)':'var(--text)'}">${pct}%</div>
           <div class="progress-track"><div class="progress-fill${pct===100?' done':''}" style="width:${pct}%"></div></div>
         </div>
       </div>
-      ${statusText ? `<div class="save-status ${statusClass}">${statusText}</div>` : ''}
+      <div id="save-indicator" class="save-status ${statusClass}">${statusText}</div>
     </div>
-
 
     <div class="tabs">
       <button class="tab${state.tab==='workout'?' active':''}" onclick="switchTab('workout')">Workout</button>
@@ -550,282 +601,263 @@ function render() {
       <button class="tab${state.tab==='history'?' active':''}" onclick="switchTab('history')">History</button>
     </div>
 
-
-    <div class="content">
-  `;
-
+    <div class="content">`;
 
   if (state.tab === "workout") {
-    html += renderWorkout(pct);
-  } else if (state.tab === "progress") {
-    html += renderProgress();
-  } else {
-    html += renderHistory();
-  }
-
-
-  html += '</div>';
-  app.innerHTML = html;
-
-
-  // Draw charts after DOM update
-  if (state.tab === "progress") {
-    const sorted = [...state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
-    if (sorted.length > 0) {
-      const compData = sorted.map(d => ({
-        label: shortDate(d.date),
-        value: Math.round((Object.keys(d.completed || {}).length / TOTAL_SETS) * 100)
-      }));
-      drawChart("chart-completion", compData, "#2d6a5a", "Completion %");
-
-
-      const painData = sorted.filter(d => d.painLevel !== undefined && d.painLevel >= 0).map(d => ({
-        label: shortDate(d.date),
-        value: d.painLevel
-      }));
-      if (painData.length > 0) {
-        drawChart("chart-pain", painData, "#c45050", "Pain Level");
-      }
-    }
-  }
-}
-
-
-function renderWorkout(pct) {
-  let html = '';
-
-
-  EXERCISES.forEach(ex => {
-    const allDone = Array.from({length: ex.sets}, (_, s) => isSetDone(ex.id, s)).every(Boolean);
-    const isOpen = state.expanded === ex.id;
-
-
-    html += `<div class="card${allDone?' done':''}">
-      <div class="card-head" onclick="toggleExpand('${ex.id}')">
-        <span class="card-emoji">${ex.emoji}</span>
-        <div class="card-info">
-          <div class="card-name">${ex.name}</div>
-          <div class="card-meta">${ex.sets} sets × ${ex.reps} · Rest ${ex.rest}</div>
-        </div>
-        <span class="card-arrow${isOpen?' open':''}">▾</span>
-      </div>`;
-
-
-    if (isOpen) {
-      html += `<div class="card-body">
-        <div class="card-instr">${ex.instructions}</div>
-        <div class="tip-box">
-          <span class="tip-label">Tip: </span>
-          <span class="tip-text">${ex.tip}</span>
-        </div>
-        <div class="card-detail"><strong>Target:</strong> ${ex.muscles}</div>
-        <div class="card-detail"><strong>Next level:</strong> ${ex.progression}</div>
-      </div>`;
-    }
-
-
-    html += '<div class="set-row">';
-    for (let s = 0; s < ex.sets; s++) {
-      const done = isSetDone(ex.id, s);
-      html += `<button class="set-btn${done?' done':''}" onclick="toggleSet('${ex.id}',${s})">${done?'✓ ':''}Set ${s+1}</button>`;
-    }
-    html += '</div></div>';
-  });
-
-
-  // Pain level
-  html += `<div class="card">
-    <div style="font-size:14px;font-weight:600;margin-bottom:10px">Ankle Pain Level Today</div>
-    <div class="pain-row">`;
-  for (let i = 0; i <= 5; i++) {
-    const sel = state.todayData.painLevel === i;
-    html += `<button class="pain-btn${sel?' sel'+i:''}" onclick="setPain(${i})">${i}</button>`;
-  }
-  html += `</div>
-    <div class="pain-labels"><span>None</span><span>Severe</span></div>
-  </div>`;
-
-
-  // Notes
-  html += `<div class="card">
-    <div style="font-size:14px;font-weight:600;margin-bottom:8px">Notes</div>
-    <textarea id="notes-input" oninput="setNotes(this.value)" placeholder="How did it feel today?">${escHtml(state.todayData.notes)}</textarea>
-  </div>`;
-
-
-  // Complete banner
-  if (pct === 100) {
-    html += `<div class="complete-banner">
-      <div class="icon">🎉</div>
-      <div class="msg">Workout Complete!</div>
-      <div class="sub">Your ankles thank you. See you tomorrow.</div>
+    // Date picker
+    html += `<div class="date-row">
+      <label>Date:</label>
+      <input type="date" class="date-input" id="date-picker" value="${state.selectedDate}" max="${todayKey()}" onchange="changeDate(this.value)">
+      ${!isToday ? '<button class="date-today-btn" onclick="goToToday()">Today</button>' : ''}
     </div>`;
-  }
 
+    if (!isToday) {
+      html += `<div class="date-past-note">📅 Logging for ${fmtDate(state.selectedDate)}</div>`;
+    }
 
-  return html;
+    // Round selector
+    html += `<div class="round-row">
+      <span class="round-label">Round:</span>
+      <div class="round-tabs">`;
+    for (let r = 1; r <= roundCount; r++) {
+      html += `<button class="round-tab${state.currentRound===r?' active':''}" onclick="switchRound(${r})">${r}</button>`;
+    }
+    html += `</div>
+      <button class="round-add" onclick="addRound()" title="Add another round">+</button>
+    </div>`;
+
+    // Exercises
+    const rd = getCurrentRoundData();
+    EXERCISES.forEach(ex => {
+      const allDone = Array.from({length: ex.sets}, (_, s) => isSetDone(ex.id, s)).every(Boolean);
+      const isOpen = state.expanded === ex.id;
+
+      html += `<div class="card${allDone?' done':''}">
+        <div class="card-head" onclick="toggleExpand('${ex.id}')">
+          <span class="card-emoji">${ex.emoji}</span>
+          <div class="card-info">
+            <div class="card-name">${ex.name}</div>
+            <div class="card-meta">${ex.sets} sets × ${ex.reps} · Rest ${ex.rest}</div>
+          </div>
+          <span class="card-arrow${isOpen?' open':''}">▾</span>
+        </div>`;
+      if (isOpen) {
+        html += `<div class="card-body">
+          <div class="card-instr">${ex.instructions}</div>
+          <div class="tip-box"><span class="tip-label">Tip: </span><span class="tip-text">${ex.tip}</span></div>
+          <div class="card-detail"><strong>Target:</strong> ${ex.muscles}</div>
+          <div class="card-detail"><strong>Next level:</strong> ${ex.progression}</div>
+        </div>`;
+      }
+      html += '<div class="set-row">';
+      for (let s = 0; s < ex.sets; s++) {
+        const done = isSetDone(ex.id, s);
+        html += `<button class="set-btn${done?' done':''}" onclick="event.stopPropagation();toggleSet('${ex.id}',${s})">${done?'✓ ':''}Set ${s+1}</button>`;
+      }
+      html += '</div></div>';
+    });
+
+    // Pain
+    html += `<div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px">Ankle Pain Level</div>
+      <div class="pain-row">`;
+    for (let i = 0; i <= 5; i++) {
+      const sel = rd.painLevel === i;
+      html += `<button class="pain-btn${sel?' sel'+i:''}" onclick="setPainLevel(${i})">${i}</button>`;
+    }
+    html += `</div><div class="pain-labels"><span>None</span><span>Severe</span></div></div>`;
+
+    // Notes
+    html += `<div class="card">
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px">Notes</div>
+      <textarea id="notes-input" oninput="setNotes(this.value)" placeholder="How did it feel?">${escHtml(rd.notes)}</textarea>
+
+```
+</div>`;
+
+if (pct === 100) {
+  html += `<div class="complete-banner">
+    <div class="icon">🎉</div>
+    <div class="msg">${roundCount > 1 ? 'Round ' + state.currentRound + ' Complete!' : 'Workout Complete!'}</div>
+    <div class="sub">${roundCount > 1 ? 'Great work on multiple rounds today!' : 'Your ankles thank you.'}</div>
+  </div>`;
+}
+```
+
+} else if (state.tab === “progress”) {
+html += renderProgress();
+} else {
+html += renderHistory();
 }
 
+html += ‘</div>’;
+app.innerHTML = html;
+
+if (state.tab === “progress”) {
+const sorted = […state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
+if (sorted.length > 0) {
+const compData = sorted.map(d => {
+const bestRound = getBestRoundPct(d);
+return { label: shortDate(d.date), value: bestRound };
+});
+drawChart(“chart-completion”, compData, “#2d6a5a”);
+
+```
+  const painData = sorted.filter(d => getAvgPain(d) >= 0).map(d => ({
+    label: shortDate(d.date), value: getAvgPain(d)
+  }));
+  if (painData.length > 0) drawChart("chart-pain", painData, "#c45050");
+}
+```
+
+}
+}
+
+function getBestRoundPct(rec) {
+if (!rec) return 0;
+if (rec.rounds) {
+let best = 0;
+Object.values(rec.rounds).forEach(r => {
+const done = Object.keys(r.completed || {}).length;
+const pct = TOTAL_SETS ? Math.round((done / TOTAL_SETS) * 100) : 0;
+if (pct > best) best = pct;
+});
+return best;
+}
+if (rec.completed) {
+return TOTAL_SETS ? Math.round((Object.keys(rec.completed).length / TOTAL_SETS) * 100) : 0;
+}
+return 0;
+}
+
+function getAvgPain(rec) {
+if (!rec) return -1;
+if (rec.rounds) {
+let sum = 0, count = 0;
+Object.values(rec.rounds).forEach(r => {
+if (r.painLevel !== undefined && r.painLevel >= 0) { sum += r.painLevel; count++; }
+});
+return count > 0 ? Math.round((sum / count) * 10) / 10 : -1;
+}
+return rec.painLevel !== undefined ? rec.painLevel : -1;
+}
 
 function renderProgress() {
-  const sorted = [...state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
+const sorted = […state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
+if (sorted.length === 0) {
+return ‘<div class="empty"><div class="icon">📊</div><div>Complete your first workout to see progress.</div></div>’;
+}
 
+const totalWorkouts = state.allDays.length;
+const totalRounds = state.allDays.reduce((s, d) => s + getTotalRoundsForDay(d), 0);
+const painDays = state.allDays.filter(d => getAvgPain(d) >= 0);
+const avgPainVal = painDays.length ? (painDays.reduce((s, d) => s + getAvgPain(d), 0) / painDays.length).toFixed(1) : “—”;
 
-  if (sorted.length === 0) {
-    return `<div class="empty"><div class="icon">📊</div><div>Complete your first workout to see progress charts.</div></div>`;
+let painTrend = “”;
+if (painDays.length >= 4) {
+const half = Math.floor(painDays.length / 2);
+const earlyAvg = painDays.slice(0, half).reduce((s, d) => s + getAvgPain(d), 0) / half;
+const recentAvg = painDays.slice(half).reduce((s, d) => s + getAvgPain(d), 0) / (painDays.length - half);
+const diff = earlyAvg - recentAvg;
+if (diff > 0.3) painTrend = “↓ Improving”;
+else if (diff < -0.3) painTrend = “↑ Worsening”;
+else painTrend = “→ Stable”;
+}
+
+let html = `<div class="section-label">Summary</div> <div style="display:flex;gap:8px;margin-bottom:14px"> <div class="stat-box" style="flex:1"><div class="stat-label">Days</div><div class="stat-val" style="font-size:22px">${totalWorkouts}</div></div> <div class="stat-box" style="flex:1"><div class="stat-label">Rounds</div><div class="stat-val" style="font-size:22px">${totalRounds}</div></div> <div class="stat-box" style="flex:1"><div class="stat-label">Avg Pain</div><div class="stat-val" style="font-size:22px">${avgPainVal}</div> ${painTrend ?`<div style="font-size:10px;color:${painTrend.includes('Improving')?'var(--accent)':painTrend.includes('Worsening')?'var(--warn-r)':'var(--text-lt)'};margin-top:2px">${painTrend}</div>` : ''} </div> </div> <div class="section-label">Best Completion % (Last 30 days)</div> <div class="chart-card"><canvas id="chart-completion" class="chart-canvas"></canvas></div> <div class="section-label">Pain Level Over Time</div> <div class="chart-card"><canvas id="chart-pain" class="chart-canvas"></canvas></div>`;
+
+html += ‘<div class="section-label">Exercise Completion Rate</div><div class="card">’;
+EXERCISES.forEach(ex => {
+let exDone = 0, exTotal = 0;
+state.allDays.forEach(d => {
+const rounds = d.rounds ? Object.values(d.rounds) : (d.completed ? [{ completed: d.completed }] : []);
+rounds.forEach(r => {
+for (let s = 0; s < ex.sets; s++) {
+exTotal++;
+if (r.completed && r.completed[ex.id + “-s” + s]) exDone++;
+}
+});
+});
+const rate = exTotal ? Math.round((exDone / exTotal) * 100) : 0;
+html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"> <span style="font-size:20px">${ex.emoji}</span> <div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:3px">${ex.name}</div> <div class="progress-track"><div class="progress-fill" style="width:${rate}%"></div></div></div> <span style="font-size:13px;font-weight:700;color:${rate>=80?'var(--accent)':'var(--text-mid)'}">${rate}%</span> </div>`;
+});
+html += ‘</div>’;
+return html;
+}
+
+function renderHistory() {
+const days = state.allDays.filter(d => getTotalSetsForDay(d) > 0);
+if (days.length === 0) {
+return ‘<div class="empty"><div class="icon">📋</div><div>No workouts logged yet.</div><div style="font-size:13px;margin-top:4px">Complete a workout to start tracking!</div></div>’;
+}
+
+let html = ‘<div class="section-label">Workout Log</div>’;
+days.forEach(rec => {
+const isToday = rec.date === todayKey();
+const rounds = rec.rounds ? Object.entries(rec.rounds) : (rec.completed ? [[“1”, { completed: rec.completed, painLevel: rec.painLevel, notes: rec.notes }]] : []);
+const painAvg = getAvgPain(rec);
+const totalDone = getTotalSetsForDay(rec);
+const roundCount = rounds.length;
+
+```
+let painBadge = "";
+if (painAvg >= 0) {
+  const cls = painAvg <= 1 ? "low" : painAvg <= 3 ? "med" : "high";
+  painBadge = `<span class="pain-badge ${cls}">Pain: ${painAvg}/5</span>`;
+}
+
+html += `<div class="hist-card">
+  <div class="hist-top">
+    <div><span class="hist-date">${isToday ? 'Today' : fmtDate(rec.date)}</span>${painBadge}</div>
+    <span class="hist-score ${totalDone >= TOTAL_SETS ? 'full' : 'partial'}">${roundCount > 1 ? roundCount + ' rounds' : totalDone + '/' + TOTAL_SETS}</span>
+  </div>`;
+
+rounds.forEach(([rNum, rd]) => {
+  const done = Object.keys(rd.completed || {}).length;
+  const pct = TOTAL_SETS ? Math.round((done / TOTAL_SETS) * 100) : 0;
+
+  if (roundCount > 1) {
+    html += `<div style="font-size:11px;font-weight:600;color:var(--text-mid);margin-top:8px">Round ${rNum} — ${done}/${TOTAL_SETS}</div>`;
   }
 
-
-  // Summary stats
-  const totalWorkouts = state.allDays.length;
-  const fullWorkouts = state.allDays.filter(d => Object.keys(d.completed || {}).length === TOTAL_SETS).length;
-  const avgPain = state.allDays.filter(d => d.painLevel >= 0);
-  const avgPainVal = avgPain.length ? (avgPain.reduce((s, d) => s + d.painLevel, 0) / avgPain.length).toFixed(1) : "—";
-
-
-  // Recent vs earlier pain comparison
-  let painTrend = "";
-  if (avgPain.length >= 4) {
-    const half = Math.floor(avgPain.length / 2);
-    const earlier = avgPain.slice(0, half);
-    const recent = avgPain.slice(half);
-    const earlyAvg = earlier.reduce((s, d) => s + d.painLevel, 0) / earlier.length;
-    const recentAvg = recent.reduce((s, d) => s + d.painLevel, 0) / recent.length;
-    const diff = earlyAvg - recentAvg;
-    if (diff > 0.3) painTrend = "↓ Improving";
-    else if (diff < -0.3) painTrend = "↑ Worsening";
-    else painTrend = "→ Stable";
-  }
-
-
-  let html = `
-    <div class="section-label">Summary</div>
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <div class="stat-box" style="flex:1">
-        <div class="stat-label">Workouts</div>
-        <div class="stat-val" style="font-size:22px">${totalWorkouts}</div>
-      </div>
-      <div class="stat-box" style="flex:1">
-        <div class="stat-label">100% Days</div>
-        <div class="stat-val" style="font-size:22px">${fullWorkouts}</div>
-      </div>
-      <div class="stat-box" style="flex:1">
-        <div class="stat-label">Avg Pain</div>
-        <div class="stat-val" style="font-size:22px">${avgPainVal}</div>
-        ${painTrend ? `<div style="font-size:10px;color:${painTrend.includes('Improving')?'var(--accent)':painTrend.includes('Worsening')?'var(--warn-r)':'var(--text-lt)'};margin-top:2px">${painTrend}</div>` : ''}
-      </div>
-    </div>
-
-
-    <div class="section-label">Completion % (Last 30 days)</div>
-    <div class="chart-card">
-      <canvas id="chart-completion" class="chart-canvas"></canvas>
-    </div>
-
-
-    <div class="section-label">Pain Level Over Time</div>
-    <div class="chart-card">
-      <canvas id="chart-pain" class="chart-canvas"></canvas>
-    </div>
-  `;
-
-
-  // Per-exercise completion rates
-  html += `<div class="section-label">Exercise Completion Rate</div><div class="card">`;
+  html += `<div class="hist-bar"><div class="hist-bar-fill${pct===100?' full':''}" style="width:${pct}%"></div></div>`;
+  html += '<div class="hist-exercises">';
   EXERCISES.forEach(ex => {
-    let exDone = 0, exTotal = 0;
-    state.allDays.forEach(d => {
-      for (let s = 0; s < ex.sets; s++) {
-        exTotal++;
-        if (d.completed && d.completed[ex.id + "-s" + s]) exDone++;
-      }
-    });
-    const rate = exTotal ? Math.round((exDone / exTotal) * 100) : 0;
-    html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-      <span style="font-size:20px">${ex.emoji}</span>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:600;margin-bottom:3px">${ex.name}</div>
-        <div class="progress-track"><div class="progress-fill" style="width:${rate}%"></div></div>
-      </div>
-      <span style="font-size:13px;font-weight:700;color:${rate>=80?'var(--accent)':'var(--text-mid)'}">${rate}%</span>
-    </div>`;
+    const exDone = Array.from({length: ex.sets}, (_, s) => !!(rd.completed && rd.completed[ex.id + "-s" + s])).every(Boolean);
+    html += `<span class="hist-ex${exDone?'':' missed'}">${ex.emoji} ${ex.name}</span>`;
   });
   html += '</div>';
 
-
-  return html;
-}
-
-
-function renderHistory() {
-  const days = state.allDays.filter(d => Object.keys(d.completed || {}).length > 0);
-
-
-  if (days.length === 0) {
-    return `<div class="empty"><div class="icon">📋</div><div>No workouts logged yet.</div><div style="font-size:13px;margin-top:4px">Complete today's workout to start tracking!</div></div>`;
+  if (rd.notes) {
+    html += `<div class="hist-note">"${escHtml(rd.notes)}"</div>`;
   }
+});
 
+html += '</div>';
+```
 
-  let html = '<div class="section-label">Workout Log</div>';
-
-
-  days.forEach(rec => {
-    const stats = dayStats(rec);
-    const isToday = rec.date === state.today;
-    const painLvl = rec.painLevel !== undefined && rec.painLevel >= 0 ? rec.painLevel : -1;
-    let painBadge = "";
-    if (painLvl >= 0) {
-      const cls = painLvl <= 1 ? "low" : painLvl <= 3 ? "med" : "high";
-      painBadge = `<span class="pain-badge ${cls}">Pain: ${painLvl}/5</span>`;
-    }
-
-
-    html += `<div class="hist-card">
-      <div class="hist-top">
-        <div>
-          <span class="hist-date">${isToday ? 'Today' : fmtDate(rec.date)}</span>
-          ${painBadge}
-        </div>
-        <span class="hist-score ${stats.pct===100?'full':'partial'}">${stats.pct===100?'✓ ':''}${stats.done}/${stats.total}</span>
-      </div>
-      <div class="hist-bar"><div class="hist-bar-fill${stats.pct===100?' full':''}" style="width:${stats.pct}%"></div></div>
-      <div class="hist-exercises">`;
-
-
-    EXERCISES.forEach(ex => {
-      const exDone = Array.from({length: ex.sets}, (_, s) => !!(rec.completed && rec.completed[ex.id + "-s" + s])).every(Boolean);
-      html += `<span class="hist-ex${exDone?'':' missed'}">${ex.emoji} ${ex.name}</span>`;
-    });
-
-
-    html += '</div>';
-    if (rec.notes) {
-      html += `<div class="hist-note">"${escHtml(rec.notes)}"</div>`;
-    }
-    html += '</div>';
-  });
-
-
-  return html;
+});
+return html;
 }
-
 
 function escHtml(s) {
-  if (!s) return "";
-  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+if (!s) return “”;
+return s.replace(/&/g,”&”).replace(/</g,”<”).replace(/>/g,”>”).replace(/”/g,”"”);
 }
 
-
-// ===== Global handlers =====
+// Global handlers
 window.switchTab = function(t) { state.tab = t; render(); };
 window.toggleExpand = function(id) { state.expanded = state.expanded === id ? null : id; render(); };
 window.toggleSet = toggleSet;
-window.setPain = setPain;
+window.setPainLevel = setPainLevel;
 window.setNotes = setNotes;
+window.addRound = addRound;
+window.switchRound = switchRound;
+window.changeDate = changeDate;
+window.goToToday = goToToday;
 
-
-// Start
 init();
 </script>
+
 </body>
 </html>
