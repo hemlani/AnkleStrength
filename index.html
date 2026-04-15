@@ -8,855 +8,495 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Ankle Str">
 <title>Ankle Strength Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f3ef; --white: #ffffff; --border: #e6e1d9; --border-lt: #eeebe5;
+    --bg: #f5f3ef; --white: #fff; --border: #e6e1d9; --border-lt: #eeebe5;
     --accent: #2d6a5a; --accent-lt: #e5f2ed; --accent-bd: #b8ddd0; --accent-mid: #4a9a85;
     --text: #2c2c2c; --text-mid: #5a5a5a; --text-lt: #999;
     --done-bg: #e5f2ed; --done-bd: #b8ddd0; --done-tx: #2d6a5a;
     --tip-bg: #fdf8f0; --tip-bd: #f0e6d4; --tip-label: #b8863e; --tip-tx: #7a6a52;
     --warn-y: #c4952e; --warn-y-bg: #fdf6e8; --warn-r: #c45050; --warn-r-bg: #fdf0f0;
     --input-bg: #faf8f6;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bot: env(safe-area-inset-bottom, 0px);
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: 'Nunito Sans', sans-serif; background: var(--bg); color: var(--text);
-    min-height: 100vh; min-height: 100dvh; overflow-x: hidden;
-    padding-top: var(--safe-top); padding-bottom: var(--safe-bot);
-  }
-  .header {
-    background: var(--white); border-bottom: 1px solid var(--border);
-    padding: 20px 20px 16px;
-  }
-  .header h1 {
-    font-family: 'Source Serif 4', serif; font-size: 24px; font-weight: 600;
-    color: var(--accent); margin: 0 0 2px; letter-spacing: 0.3px;
-  }
-  .header .sub { font-size: 12px; color: var(--text-lt); letter-spacing: 1.5px; text-transform: uppercase; }
-  .stats-row { display: flex; gap: 12px; margin-top: 16px; }
-  .stat-box {
-    flex: 1; background: var(--accent-lt); border-radius: 12px; padding: 10px 12px;
-    border: 1px solid var(--accent-bd);
-  }
-  .stat-label { font-size: 10px; color: var(--text-lt); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
-  .stat-val { font-size: 26px; font-weight: 700; color: var(--accent); }
-  .stat-val span { font-size: 13px; font-weight: 400; }
-  .progress-track { height: 4px; background: var(--border); border-radius: 2px; margin-top: 6px; overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.4s ease; background: linear-gradient(90deg, var(--accent-mid), var(--accent)); }
-  .progress-fill.done { background: var(--accent); }
-  .save-status {
-    font-size: 11px; padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 10px;
-    transition: all 0.3s;
-  }
-  .save-status.ok { background: var(--done-bg); color: var(--done-tx); }
-  .save-status.err { background: var(--warn-r-bg); color: var(--warn-r); }
-
-.tabs { display: flex; padding: 12px 20px 0; gap: 6px; }
-.tab {
-flex: 1; padding: 9px 0; border-radius: 10px; border: 1px solid var(–border);
-background: transparent; color: var(–text-lt); font-size: 12px; font-weight: 600;
-font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-transition: all 0.2s;
-}
-.tab.active { background: var(–accent-lt); border-color: var(–accent-bd); color: var(–accent); }
-
-.content { padding: 14px 20px 100px; }
-.card {
-background: var(–white); border: 1px solid var(–border-lt); border-radius: 14px;
-padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-transition: all 0.3s;
-}
-.card.done { background: var(–done-bg); border-color: var(–done-bd); box-shadow: none; }
-.card-head { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.card-emoji { font-size: 26px; }
-.card-info { flex: 1; }
-.card-name { font-size: 15px; font-weight: 600; color: var(–text); transition: all 0.2s; }
-.card.done .card-name { color: var(–done-tx); text-decoration: line-through; opacity: 0.6; }
-.card-meta { font-size: 11px; color: var(–text-mid); margin-top: 1px; }
-.card-arrow { font-size: 16px; color: var(–text-lt); transition: transform 0.2s; }
-.card-arrow.open { transform: rotate(180deg); }
-
-.card-body { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(–border-lt); }
-.card-instr { font-size: 13px; line-height: 1.55; color: var(–text-mid); margin-bottom: 10px; }
-.tip-box {
-background: var(–tip-bg); border: 1px solid var(–tip-bd); border-radius: 8px;
-padding: 8px 10px; margin-bottom: 8px;
-}
-.tip-label { font-size: 10px; color: var(–tip-label); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
-.tip-text { font-size: 12px; color: var(–tip-tx); }
-.card-detail { font-size: 12px; color: var(–text-mid); margin-bottom: 3px; }
-.card-detail strong { color: var(–text); }
-
-.set-row { display: flex; gap: 8px; margin-top: 12px; }
-.set-btn {
-flex: 1; padding: 10px 0; border-radius: 10px; font-size: 13px; font-weight: 600;
-font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; transition: all 0.15s;
-border: 1px solid var(–border); background: var(–input-bg); color: var(–text-lt);
-}
-.set-btn.done { background: var(–accent); border-color: var(–accent); color: #fff; }
-.set-btn:active { transform: scale(0.96); }
-
-.pain-row { display: flex; gap: 5px; }
-.pain-btn {
-flex: 1; padding: 9px 0; border-radius: 8px; font-size: 14px; font-weight: 600;
-font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; transition: all 0.15s;
-border: 1px solid var(–border); background: var(–input-bg); color: var(–text-lt);
-}
-.pain-btn.sel0, .pain-btn.sel1 { background: var(–accent-lt); border-color: var(–accent-bd); color: var(–accent); }
-.pain-btn.sel2, .pain-btn.sel3 { background: var(–warn-y-bg); border-color: #e8d6a8; color: var(–warn-y); }
-.pain-btn.sel4, .pain-btn.sel5 { background: var(–warn-r-bg); border-color: #e8b0b0; color: var(–warn-r); }
-.pain-btn:active { transform: scale(0.95); }
-.pain-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(–text-lt); margin-top: 4px; padding: 0 2px; }
-
-textarea {
-width: 100%; min-height: 60px; background: var(–input-bg); border: 1px solid var(–border);
-border-radius: 10px; color: var(–text); font-size: 13px; font-family: ‘Nunito Sans’, sans-serif;
-padding: 10px 12px; resize: vertical; outline: none;
-}
-textarea:focus { border-color: var(–accent-bd); }
-
-.complete-banner {
-text-align: center; padding: 18px; background: var(–done-bg); border-radius: 14px;
-border: 1px solid var(–done-bd);
-}
-.complete-banner .icon { font-size: 34px; margin-bottom: 6px; }
-.complete-banner .msg { font-size: 17px; font-weight: 700; color: var(–accent); }
-.complete-banner .sub { font-size: 12px; color: var(–text-mid); margin-top: 3px; }
-
-.hist-card {
-background: var(–white); border: 1px solid var(–border-lt); border-radius: 12px;
-padding: 12px 14px; margin-bottom: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-}
-.hist-top { display: flex; justify-content: space-between; align-items: center; }
-.hist-date { font-size: 14px; font-weight: 600; color: var(–text); }
-.hist-score { font-size: 14px; font-weight: 700; }
-.hist-score.full { color: var(–accent); }
-.hist-score.partial { color: var(–text-mid); }
-.pain-badge {
-display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px;
-border-radius: 5px; margin-left: 8px; vertical-align: middle;
-}
-.pain-badge.low { color: var(–accent); background: var(–accent-lt); }
-.pain-badge.med { color: var(–warn-y); background: var(–warn-y-bg); }
-.pain-badge.high { color: var(–warn-r); background: var(–warn-r-bg); }
-.hist-bar { height: 3px; background: var(–border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
-.hist-bar-fill { height: 100%; border-radius: 2px; background: var(–accent-mid); }
-.hist-bar-fill.full { background: var(–accent); }
-.hist-note { font-size: 12px; color: var(–text-mid); font-style: italic; margin-top: 6px; }
-.hist-exercises { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; }
-.hist-ex {
-font-size: 11px; padding: 2px 8px; border-radius: 6px;
-background: var(–accent-lt); color: var(–accent); font-weight: 500;
-}
-.hist-ex.missed { background: #f5f0ea; color: var(–text-lt); text-decoration: line-through; }
-.hist-rounds { font-size: 11px; color: var(–accent-mid); font-weight: 600; margin-top: 4px; }
-
-.empty { text-align: center; padding: 40px 20px; color: var(–text-lt); }
-.empty .icon { font-size: 34px; margin-bottom: 10px; }
-
-.chart-card {
-background: var(–white); border: 1px solid var(–border-lt); border-radius: 14px;
-padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-}
-.chart-canvas { width: 100%; height: 140px; }
-
-.section-label {
-font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(–text-lt);
-font-weight: 600; margin: 16px 0 8px; padding-left: 2px;
-}
-
-/* Date picker row */
-.date-row {
-display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
-background: var(–white); border: 1px solid var(–border-lt); border-radius: 12px;
-padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-}
-.date-row label { font-size: 13px; font-weight: 600; color: var(–text); white-space: nowrap; }
-.date-input {
-flex: 1; font-size: 14px; font-family: ‘Nunito Sans’, sans-serif;
-border: 1px solid var(–border); border-radius: 8px; padding: 8px 10px;
-background: var(–input-bg); color: var(–text); outline: none;
--webkit-appearance: none;
-}
-.date-input:focus { border-color: var(–accent-bd); }
-.date-today-btn {
-padding: 8px 12px; border-radius: 8px; border: 1px solid var(–accent-bd);
-background: var(–accent-lt); color: var(–accent); font-size: 12px; font-weight: 600;
-font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; white-space: nowrap;
-}
-.date-today-btn:active { transform: scale(0.96); }
-.date-past-note {
-font-size: 11px; color: var(–warn-y); background: var(–warn-y-bg);
-padding: 4px 10px; border-radius: 6px; margin-bottom: 10px; display: inline-block;
-}
-
-/* Round selector */
-.round-row {
-display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
-background: var(–white); border: 1px solid var(–border-lt); border-radius: 12px;
-padding: 10px 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-}
-.round-label { font-size: 13px; font-weight: 600; color: var(–text); white-space: nowrap; }
-.round-tabs { display: flex; gap: 4px; flex: 1; }
-.round-tab {
-padding: 6px 12px; border-radius: 8px; border: 1px solid var(–border);
-background: var(–input-bg); color: var(–text-lt); font-size: 12px; font-weight: 600;
-font-family: ‘Nunito Sans’, sans-serif; cursor: pointer; transition: all 0.15s;
-}
-.round-tab.active { background: var(–accent); border-color: var(–accent); color: #fff; }
-.round-tab:active { transform: scale(0.95); }
-.round-add {
-padding: 6px 10px; border-radius: 8px; border: 1px dashed var(–accent-bd);
-background: transparent; color: var(–accent); font-size: 14px; font-weight: 700;
-font-family: ‘Nunito Sans’, sans-serif; cursor: pointer;
-}
-.round-add:active { transform: scale(0.95); }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0) 0}
+  .header{background:var(--white);border-bottom:1px solid var(--border);padding:20px 20px 16px}
+  .header h1{font-size:24px;font-weight:700;color:var(--accent);margin:0 0 2px}
+  .header .sub{font-size:12px;color:var(--text-lt);letter-spacing:1.5px;text-transform:uppercase}
+  .stats-row{display:flex;gap:12px;margin-top:16px}
+  .stat-box{flex:1;background:var(--accent-lt);border-radius:12px;padding:10px 12px;border:1px solid var(--accent-bd)}
+  .stat-label{font-size:10px;color:var(--text-lt);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+  .stat-val{font-size:26px;font-weight:700;color:var(--accent)}
+  .stat-val span{font-size:13px;font-weight:400}
+  .progress-track{height:4px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+  .progress-fill{height:100%;border-radius:2px;transition:width .4s;background:linear-gradient(90deg,var(--accent-mid),var(--accent))}
+  .progress-fill.done{background:var(--accent)}
+  .save-status{font-size:11px;padding:4px 10px;border-radius:6px;display:inline-block;margin-top:10px}
+  .save-status.ok{background:var(--done-bg);color:var(--done-tx)}
+  .save-status.err{background:var(--warn-r-bg);color:var(--warn-r)}
+  .tabs{display:flex;padding:12px 20px 0;gap:6px}
+  .tab{flex:1;padding:9px 0;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--text-lt);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;text-transform:uppercase;letter-spacing:1px}
+  .tab.active{background:var(--accent-lt);border-color:var(--accent-bd);color:var(--accent)}
+  .content{padding:14px 20px 100px}
+  .card{background:var(--white);border:1px solid var(--border-lt);border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+  .card.done{background:var(--done-bg);border-color:var(--done-bd);box-shadow:none}
+  .card-head{display:flex;align-items:center;gap:10px;cursor:pointer}
+  .card-emoji{font-size:26px}
+  .card-name{font-size:15px;font-weight:600;color:var(--text)}
+  .card.done .card-name{color:var(--done-tx);text-decoration:line-through;opacity:.6}
+  .card-meta{font-size:11px;color:var(--text-mid);margin-top:1px}
+  .card-arrow{font-size:16px;color:var(--text-lt);transition:transform .2s}
+  .card-arrow.open{transform:rotate(180deg)}
+  .card-body{margin-top:12px;padding-top:12px;border-top:1px solid var(--border-lt)}
+  .card-instr{font-size:13px;line-height:1.55;color:var(--text-mid);margin-bottom:10px}
+  .tip-box{background:var(--tip-bg);border:1px solid var(--tip-bd);border-radius:8px;padding:8px 10px;margin-bottom:8px}
+  .tip-label{font-size:10px;color:var(--tip-label);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+  .tip-text{font-size:12px;color:var(--tip-tx)}
+  .card-detail{font-size:12px;color:var(--text-mid);margin-bottom:3px}
+  .card-detail strong{color:var(--text)}
+  .set-row{display:flex;gap:8px;margin-top:12px}
+  .set-btn{flex:1;padding:10px 0;border-radius:10px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid var(--border);background:var(--input-bg);color:var(--text-lt)}
+  .set-btn.done{background:var(--accent);border-color:var(--accent);color:#fff}
+  .set-btn:active{transform:scale(.96)}
+  .pain-row{display:flex;gap:5px}
+  .pain-btn{flex:1;padding:9px 0;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid var(--border);background:var(--input-bg);color:var(--text-lt)}
+  .pain-btn.s0,.pain-btn.s1{background:var(--accent-lt);border-color:var(--accent-bd);color:var(--accent)}
+  .pain-btn.s2,.pain-btn.s3{background:var(--warn-y-bg);border-color:#e8d6a8;color:var(--warn-y)}
+  .pain-btn.s4,.pain-btn.s5{background:var(--warn-r-bg);border-color:#e8b0b0;color:var(--warn-r)}
+  .pain-btn:active{transform:scale(.95)}
+  .pain-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text-lt);margin-top:4px;padding:0 2px}
+  textarea{width:100%;min-height:60px;background:var(--input-bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;font-family:inherit;padding:10px 12px;resize:vertical;outline:none}
+  textarea:focus{border-color:var(--accent-bd)}
+  .complete-banner{text-align:center;padding:18px;background:var(--done-bg);border-radius:14px;border:1px solid var(--done-bd)}
+  .hist-card{background:var(--white);border:1px solid var(--border-lt);border-radius:12px;padding:12px 14px;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .hist-top{display:flex;justify-content:space-between;align-items:center}
+  .hist-date{font-size:14px;font-weight:600}
+  .hist-score{font-size:14px;font-weight:700}
+  .hist-score.full{color:var(--accent)}
+  .hist-score.partial{color:var(--text-mid)}
+  .pain-badge{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;margin-left:8px}
+  .pain-badge.low{color:var(--accent);background:var(--accent-lt)}
+  .pain-badge.med{color:var(--warn-y);background:var(--warn-y-bg)}
+  .pain-badge.high{color:var(--warn-r);background:var(--warn-r-bg)}
+  .hist-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden}
+  .hist-bar-fill{height:100%;border-radius:2px;background:var(--accent-mid)}
+  .hist-bar-fill.full{background:var(--accent)}
+  .hist-note{font-size:12px;color:var(--text-mid);font-style:italic;margin-top:6px}
+  .hist-exercises{margin-top:8px;display:flex;flex-wrap:wrap;gap:4px}
+  .hist-ex{font-size:11px;padding:2px 8px;border-radius:6px;background:var(--accent-lt);color:var(--accent);font-weight:500}
+  .hist-ex.missed{background:#f5f0ea;color:var(--text-lt);text-decoration:line-through}
+  .empty{text-align:center;padding:40px 20px;color:var(--text-lt)}
+  .chart-card{background:var(--white);border:1px solid var(--border-lt);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+  .chart-canvas{width:100%;height:140px}
+  .section-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-lt);font-weight:600;margin:16px 0 8px;padding-left:2px}
+  .date-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;background:var(--white);border:1px solid var(--border-lt);border-radius:12px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+  .date-row label{font-size:13px;font-weight:600;white-space:nowrap}
+  .date-input{flex:1;font-size:14px;font-family:inherit;border:1px solid var(--border);border-radius:8px;padding:8px 10px;background:var(--input-bg);color:var(--text);outline:none;-webkit-appearance:none}
+  .date-today-btn{padding:8px 12px;border-radius:8px;border:1px solid var(--accent-bd);background:var(--accent-lt);color:var(--accent);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap}
+  .date-past-note{font-size:11px;color:var(--warn-y);background:var(--warn-y-bg);padding:4px 10px;border-radius:6px;margin-bottom:10px;display:inline-block}
+  .round-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;background:var(--white);border:1px solid var(--border-lt);border-radius:12px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+  .round-label{font-size:13px;font-weight:600;white-space:nowrap}
+  .round-tabs{display:flex;gap:4px;flex:1}
+  .round-tab{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--input-bg);color:var(--text-lt);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer}
+  .round-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  .round-add{padding:6px 10px;border-radius:8px;border:1px dashed var(--accent-bd);background:transparent;color:var(--accent);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
 </style>
-
 </head>
 <body>
-
-<div id="app"></div>
-
+<div id="app">
+  <div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#2d6a5a">
+    <p>Loading...</p>
+  </div>
+</div>
 <script>
-// ===== IndexedDB =====
-const DB_NAME = "AnkleStrengthDB";
-const DB_VER = 2;
-const STORE = "workouts";
+(function(){
+"use strict";
+try{
 
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(STORE)) {
-        db.createObjectStore(STORE, { keyPath: "date" });
-      }
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
+// ===== DB =====
+var DB=“AnkleStrengthDB”,VER=2,ST=“workouts”;
+function openDB(){
+return new Promise(function(ok,no){
+var r=indexedDB.open(DB,VER);
+r.onupgradeneeded=function(e){var d=e.target.result;if(!d.objectStoreNames.contains(ST))d.createObjectStore(ST,{keyPath:“date”})};
+r.onsuccess=function(){ok(r.result)};
+r.onerror=function(){no(r.error)};
+});
 }
-
-async function saveDay(date, data) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, "readwrite");
-    tx.objectStore(STORE).put({ date, ...data });
-    tx.oncomplete = () => resolve(true);
-    tx.onerror = () => reject(tx.error);
-  });
+function saveDay(date,data){
+return openDB().then(function(db){
+return new Promise(function(ok,no){
+var tx=db.transaction(ST,“readwrite”);
+tx.objectStore(ST).put(Object.assign({date:date},data));
+tx.oncomplete=function(){ok(true)};
+tx.onerror=function(){no(tx.error)};
+});
+});
 }
-
-async function loadDay(date) {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, "readonly");
-    const req = tx.objectStore(STORE).get(date);
-    req.onsuccess = () => resolve(req.result || null);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function loadAllDays() {
-  const db = await openDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE, "readonly");
-    const req = tx.objectStore(STORE).getAll();
-    req.onsuccess = () => resolve(req.result || []);
-    req.onerror = () => reject(req.error);
-  });
+function loadAllDays(){
+return openDB().then(function(db){
+return new Promise(function(ok,no){
+var tx=db.transaction(ST,“readonly”);
+var r=tx.objectStore(ST).getAll();
+r.onsuccess=function(){ok(r.result||[])};
+r.onerror=function(){no(r.error)};
+});
+});
 }
 
 // ===== Exercises =====
-const EXERCISES = [
-  { id: "calf-raises", name: "Calf Raises", emoji: "🦵", sets: 2, reps: "12-15", rest: "30s",
-    instructions: "Stand flat on the ground. Rise up onto your toes as high as you can. Hold 1 second at the top. Slowly lower back down.",
-    tip: "Keep your core tight and don't rush the lowering phase.", progression: "Move to a stair edge so your heel drops below the step.", muscles: "Calves" },
-  { id: "tibialis-raises", name: "Tibialis Raises", emoji: "🦿", sets: 2, reps: "15-20", rest: "30s",
-    instructions: "Lean your back flat against a wall. Feet about 12 inches out. Lift your toes up toward your shins, then lower slowly.",
-    tip: "Feel the burn in the front of your shins. That's the target.", progression: "Add a light dumbbell on top of your foot.", muscles: "Front of shin" },
-  { id: "ankle-alphabet", name: "Ankle Alphabet", emoji: "🔤", sets: 1, reps: "A-Z each foot", rest: "—",
-    instructions: "Sit in a chair. Lift one foot. Trace each letter of the alphabet in the air using your big toe. Switch feet.",
-    tip: "Make the letters big and deliberate.", progression: "Add an ankle weight.", muscles: "Ankle stabilizers" },
-  { id: "single-leg-balance", name: "Single Leg Balance", emoji: "🧘", sets: 2, reps: "30-60s / leg", rest: "15s",
-    instructions: "Stand on one foot. Eyes forward, core engaged. Hold up to 60 seconds. Switch legs.",
-    tip: "Too easy? Close your eyes or stand on a folded towel.", progression: "Try on a pillow.", muscles: "Proprioceptors" },
-  { id: "heel-walks", name: "Heel Walks", emoji: "🚶", sets: 2, reps: "30 steps", rest: "20s",
-    instructions: "Walk forward on just your heels with toes lifted. Short, controlled steps.",
-    tip: "Arms out to the side for balance.", progression: "Increase to 50 steps.", muscles: "Dorsiflexors" },
-  { id: "toe-spreads", name: "Toe Spreads & Curls", emoji: "🦶", sets: 2, reps: "15 / foot", rest: "20s",
-    instructions: "Barefoot: spread all five toes apart wide, hold 2 sec. Curl them under like gripping the floor, hold 2 sec. That's one rep.",
-    tip: "Most people can barely spread their toes at first. It improves fast.", progression: "Do them standing on one leg.", muscles: "Foot muscles" }
+var EX=[
+{id:“calf-raises”,name:“Calf Raises”,emoji:”\u{1F9B5}”,sets:2,reps:“12-15”,rest:“30s”,
+inst:“Stand flat on the ground. Rise up onto your toes as high as you can. Hold 1 second at the top. Slowly lower back down.”,
+tip:“Keep your core tight and don’t rush the lowering phase.”,prog:“Move to a stair edge so your heel drops below the step.”,muscles:“Calves”},
+{id:“tibialis-raises”,name:“Tibialis Raises”,emoji:”\u{1F9BF}”,sets:2,reps:“15-20”,rest:“30s”,
+inst:“Lean your back flat against a wall. Feet about 12 inches out. Lift your toes up toward your shins, then lower slowly.”,
+tip:“Feel the burn in the front of your shins. That’s the target.”,prog:“Add a light dumbbell on top of your foot.”,muscles:“Front of shin”},
+{id:“ankle-alphabet”,name:“Ankle Alphabet”,emoji:”\u{1F524}”,sets:1,reps:“A-Z each foot”,rest:”\u2014”,
+inst:“Sit in a chair. Lift one foot. Trace each letter of the alphabet in the air using your big toe. Switch feet.”,
+tip:“Make the letters big and deliberate.”,prog:“Add an ankle weight.”,muscles:“Ankle stabilizers”},
+{id:“single-leg-balance”,name:“Single Leg Balance”,emoji:”\u{1F9D8}”,sets:2,reps:“30-60s / leg”,rest:“15s”,
+inst:“Stand on one foot. Eyes forward, core engaged. Hold up to 60 seconds. Switch legs.”,
+tip:“Too easy? Close your eyes or stand on a folded towel.”,prog:“Try on a pillow.”,muscles:“Proprioceptors”},
+{id:“heel-walks”,name:“Heel Walks”,emoji:”\u{1F6B6}”,sets:2,reps:“30 steps”,rest:“20s”,
+inst:“Walk forward on just your heels with toes lifted. Short, controlled steps.”,
+tip:“Arms out to the side for balance.”,prog:“Increase to 50 steps.”,muscles:“Dorsiflexors”},
+{id:“toe-spreads”,name:“Toe Spreads & Curls”,emoji:”\u{1F9B6}”,sets:2,reps:“15 / foot”,rest:“20s”,
+inst:“Barefoot: spread all five toes apart wide, hold 2 sec. Curl them under like gripping the floor, hold 2 sec. That’s one rep.”,
+tip:“Most people can barely spread their toes at first. It improves fast.”,prog:“Do them standing on one leg.”,muscles:“Foot muscles”}
 ];
-const TOTAL_SETS = EXERCISES.reduce((s, e) => s + e.sets, 0);
+var TSETS=0;for(var i=0;i<EX.length;i++)TSETS+=EX[i].sets;
 
-function todayKey() {
-  const d = new Date();
-  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-}
-
-function fmtDate(s) {
-  const d = new Date(s + "T12:00:00");
-  const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-  const mos = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return days[d.getDay()] + ", " + mos[d.getMonth()] + " " + d.getDate();
-}
-
-function shortDate(s) {
-  const d = new Date(s + "T12:00:00");
-  return (d.getMonth()+1) + "/" + d.getDate();
-}
+function todayKey(){var d=new Date();return d.getFullYear()+”-”+z(d.getMonth()+1)+”-”+z(d.getDate())}
+function z(n){return n<10?“0”+n:””+n}
+function fmtDate(s){var d=new Date(s+“T12:00:00”);var days=[“Sun”,“Mon”,“Tue”,“Wed”,“Thu”,“Fri”,“Sat”];var mos=[“Jan”,“Feb”,“Mar”,“Apr”,“May”,“Jun”,“Jul”,“Aug”,“Sep”,“Oct”,“Nov”,“Dec”];return days[d.getDay()]+”, “+mos[d.getMonth()]+” “+d.getDate()}
+function shortDate(s){var d=new Date(s+“T12:00:00”);return(d.getMonth()+1)+”/”+d.getDate()}
 
 // ===== State =====
-let state = {
-  tab: "workout",
-  selectedDate: todayKey(),
-  currentRound: 1,
-  dayData: null, // { rounds: { 1: {completed:{}, painLevel:-1, notes:""}, 2: {...} } }
-  allDays: [],
-  expanded: null,
-  saveStatus: "loading",
-  loaded: false
+var S={
+tab:“workout”,selDate:todayKey(),curRound:1,
+dayData:{rounds:{“1”:{completed:{},painLevel:-1,notes:””}}},
+allDays:[],expanded:null,saveStatus:“loading”,loaded:false
 };
 
-function emptyRound() {
-  return { completed: {}, painLevel: -1, notes: "" };
-}
-
-function emptyDay() {
-  return { rounds: { 1: emptyRound() } };
-}
-
-function getCurrentRoundData() {
-  if (!state.dayData) return emptyRound();
-  return state.dayData.rounds[state.currentRound] || emptyRound();
-}
-
-function getRoundCount() {
-  if (!state.dayData) return 1;
-  return Object.keys(state.dayData.rounds).length;
-}
-
-function getTotalSetsForDay(rec) {
-  if (!rec || !rec.rounds) return 0;
-  let total = 0;
-  Object.values(rec.rounds).forEach(r => {
-    total += Object.keys(r.completed || {}).length;
-  });
-  return total;
-}
-
-function getTotalRoundsForDay(rec) {
-  if (!rec || !rec.rounds) return 0;
-  return Object.keys(rec.rounds).length;
-}
+function emptyRound(){return{completed:{},painLevel:-1,notes:””}}
+function emptyDay(){return{rounds:{“1”:emptyRound()}}}
+function curRd(){if(!S.dayData)return emptyRound();return S.dayData.rounds[S.curRound]||emptyRound()}
+function rdCount(){return S.dayData?Object.keys(S.dayData.rounds).length:1}
+function totalSetsDay(rec){if(!rec||!rec.rounds)return 0;var t=0;var ks=Object.keys(rec.rounds);for(var i=0;i<ks.length;i++)t+=Object.keys(rec.rounds[ks[i]].completed||{}).length;return t}
 
 // ===== Init =====
-async function init() {
-  try {
-    const all = await loadAllDays();
-    state.allDays = all.sort((a, b) => b.date.localeCompare(a.date));
-    await loadSelectedDay();
-    state.saveStatus = "saved";
-  } catch (e) {
-    console.error("Load failed:", e);
-    state.saveStatus = "error";
-  }
-  state.loaded = true;
-  render();
+function init(){
+loadAllDays().then(function(all){
+S.allDays=all.sort(function(a,b){return b.date<a.date?-1:b.date>a.date?1:0});
+loadSelDay();
+S.saveStatus=“saved”;
+S.loaded=true;
+render();
+}).catch(function(e){
+console.error(“Init error:”,e);
+S.saveStatus=“error”;
+S.loaded=true;
+render();
+});
 }
 
-async function loadSelectedDay() {
-  const rec = await loadDay(state.selectedDate);
-  if (rec && rec.rounds) {
-    state.dayData = { rounds: rec.rounds };
-  } else if (rec && rec.completed) {
-    // Migrate old format
-    state.dayData = { rounds: { 1: { completed: rec.completed, painLevel: rec.painLevel !== undefined ? rec.painLevel : -1, notes: rec.notes || "" } } };
-  } else {
-    state.dayData = emptyDay();
-  }
-  // Ensure current round exists
-  if (!state.dayData.rounds[state.currentRound]) {
-    state.currentRound = 1;
-  }
+function loadSelDay(){
+var rec=null;
+for(var i=0;i<S.allDays.length;i++){if(S.allDays[i].date===S.selDate){rec=S.allDays[i];break;}}
+if(rec&&rec.rounds){
+S.dayData={rounds:rec.rounds};
+}else if(rec&&rec.completed){
+S.dayData={rounds:{“1”:{completed:rec.completed,painLevel:rec.painLevel!=null?rec.painLevel:-1,notes:rec.notes||””}}};
+}else{
+S.dayData=emptyDay();
+}
+if(!S.dayData.rounds[S.curRound])S.curRound=1;
 }
 
-async function persistDay() {
-  state.saveStatus = "saving";
-  renderStatusOnly();
-  try {
-    await saveDay(state.selectedDate, state.dayData);
-    const all = await loadAllDays();
-    state.allDays = all.sort((a, b) => b.date.localeCompare(a.date));
-    state.saveStatus = "saved";
-  } catch (e) {
-    console.error("Save error:", e);
-    state.saveStatus = "error";
-  }
-  renderStatusOnly();
+var saveTimer=null;
+function persistDay(){
+S.saveStatus=“saving”;
+updateStatus();
+saveDay(S.selDate,S.dayData).then(function(){
+return loadAllDays();
+}).then(function(all){
+S.allDays=all.sort(function(a,b){return b.date<a.date?-1:b.date>a.date?1:0});
+S.saveStatus=“saved”;
+updateStatus();
+}).catch(function(e){
+console.error(“Save error:”,e);
+S.saveStatus=“error”;
+updateStatus();
+});
 }
 
-function renderStatusOnly() {
-  const el = document.getElementById("save-indicator");
-  if (el) {
-    const txt = state.saveStatus === "saved" ? "✓ Saved" : state.saveStatus === "saving" ? "Saving..." : "⚠ Error";
-    const cls = state.saveStatus === "error" ? "err" : "ok";
-    el.className = "save-status " + cls;
-    el.textContent = txt;
-  }
+function updateStatus(){
+var el=document.getElementById(“save-ind”);
+if(el){
+el.textContent=S.saveStatus===“saved”?”\u2713 Saved”:S.saveStatus===“saving”?“Saving…”:”\u26A0 Error”;
+el.className=“save-status “+(S.saveStatus===“error”?“err”:“ok”);
+}
 }
 
 // ===== Actions =====
-function toggleSet(exId, setIdx) {
-  const rd = getCurrentRoundData();
-  const key = exId + "-s" + setIdx;
-  const c = { ...rd.completed };
-  if (c[key]) { delete c[key]; } else { c[key] = Date.now(); }
-  rd.completed = c;
-  state.dayData.rounds[state.currentRound] = rd;
-  persistDay();
-  render();
+window.doToggleSet=function(exId,si){
+var rd=curRd();var k=exId+”-s”+si;var c={};var ks=Object.keys(rd.completed);
+for(var i=0;i<ks.length;i++)c[ks[i]]=rd.completed[ks[i]];
+if(c[k])delete c[k];else c[k]=Date.now();
+rd.completed=c;
+S.dayData.rounds[S.curRound]=rd;
+persistDay();render();
+};
+window.doSetPain=function(lv){
+var rd=curRd();rd.painLevel=lv;
+S.dayData.rounds[S.curRound]=rd;
+persistDay();render();
+};
+window.doSetNotes=function(el){
+var rd=curRd();rd.notes=el.value;
+S.dayData.rounds[S.curRound]=rd;
+clearTimeout(saveTimer);saveTimer=setTimeout(function(){persistDay()},800);
+};
+window.doAddRound=function(){
+var n=rdCount()+1;
+S.dayData.rounds[””+n]=emptyRound();
+S.curRound=n;
+persistDay();render();
+};
+window.doSwitchRound=function(r){S.curRound=r;render()};
+window.doChangeDate=function(el){
+S.selDate=el.value;S.curRound=1;
+loadSelDay();render();
+};
+window.doGoToday=function(){
+S.selDate=todayKey();S.curRound=1;
+loadSelDay();render();
+};
+window.doSwitchTab=function(t){S.tab=t;render()};
+window.doToggleEx=function(id){S.expanded=S.expanded===id?null:id;render()};
+
+function isSetDone(exId,si){return!!curRd().completed[exId+”-s”+si]}
+function rdDone(){return Object.keys(curRd().completed).length}
+function rdPct(){return TSETS?Math.round(rdDone()/TSETS*100):0}
+
+function getStreak(){
+var count=0,d=new Date(),tk=todayKey();
+for(;;){
+var k=d.getFullYear()+”-”+z(d.getMonth()+1)+”-”+z(d.getDate());
+var rec=null;for(var i=0;i<S.allDays.length;i++){if(S.allDays[i].date===k){rec=S.allDays[i];break;}}
+var has=rec?totalSetsDay(rec)>0:false;
+if(has){count++;d.setDate(d.getDate()-1)}
+else if(k===tk){d.setDate(d.getDate()-1)}
+else break;
+}
+return count;
 }
 
-function setPainLevel(level) {
-  const rd = getCurrentRoundData();
-  rd.painLevel = level;
-  state.dayData.rounds[state.currentRound] = rd;
-  persistDay();
-  render();
+function getAvgPain(rec){
+if(!rec)return-1;
+if(rec.rounds){var s=0,c=0;var ks=Object.keys(rec.rounds);for(var i=0;i<ks.length;i++){var r=rec.rounds[ks[i]];if(r.painLevel!=null&&r.painLevel>=0){s+=r.painLevel;c++}}return c>0?Math.round(s/c*10)/10:-1}
+return rec.painLevel!=null?rec.painLevel:-1;
 }
 
-function setNotes(val) {
-  const rd = getCurrentRoundData();
-  rd.notes = val;
-  state.dayData.rounds[state.currentRound] = rd;
-  clearTimeout(setNotes._t);
-  setNotes._t = setTimeout(() => persistDay(), 800);
-}
-
-function addRound() {
-  const next = getRoundCount() + 1;
-  state.dayData.rounds[next] = emptyRound();
-  state.currentRound = next;
-  persistDay();
-  render();
-}
-
-function switchRound(r) {
-  state.currentRound = r;
-  render();
-}
-
-async function changeDate(dateStr) {
-  state.selectedDate = dateStr;
-  state.currentRound = 1;
-  await loadSelectedDay();
-  render();
-}
-
-function goToToday() {
-  const inp = document.getElementById("date-picker");
-  if (inp) inp.value = todayKey();
-  changeDate(todayKey());
-}
-
-function isSetDone(exId, setIdx) {
-  const rd = getCurrentRoundData();
-  return !!rd.completed[exId + "-s" + setIdx];
-}
-
-function roundDone() {
-  return Object.keys(getCurrentRoundData().completed).length;
-}
-
-function roundPct() {
-  return TOTAL_SETS ? Math.round((roundDone() / TOTAL_SETS) * 100) : 0;
-}
-
-function getStreak() {
-  let count = 0;
-  const d = new Date();
-  const today = todayKey();
-  while (true) {
-    const key = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
-    const rec = state.allDays.find(r => r.date === key);
-    const has = rec ? getTotalSetsForDay(rec) > 0 : false;
-    if (has) { count++; d.setDate(d.getDate() - 1); }
-    else if (key === today) { d.setDate(d.getDate() - 1); }
-    else { break; }
-  }
-  return count;
-}
-
-// ===== Chart =====
-function drawChart(canvasId, data, color) {
-  requestAnimationFrame(() => {
-    const canvas = document.getElementById(canvasId);
-    if (!canvas || !data.length) return;
-    const ctx = canvas.getContext("2d");
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-    const W = rect.width, H = rect.height;
-    const pad = { t: 10, r: 10, b: 24, l: 30 };
-    const cw = W - pad.l - pad.r, ch = H - pad.t - pad.b;
-    const vals = data.map(d => d.value);
-    const maxV = Math.max(...vals, 1);
-    const minV = Math.min(...vals, 0);
-    const range = maxV - minV || 1;
-
-    ctx.clearRect(0, 0, W, H);
-    ctx.strokeStyle = "#eee"; ctx.lineWidth = 0.5;
-    for (let i = 0; i <= 4; i++) {
-      const y = pad.t + ch - (ch * i / 4);
-      ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
-    }
-    ctx.fillStyle = "#aaa"; ctx.font = "10px 'Nunito Sans', sans-serif"; ctx.textAlign = "right";
-    for (let i = 0; i <= 4; i++) {
-      const y = pad.t + ch - (ch * i / 4);
-      ctx.fillText(Math.round(minV + (range * i / 4)), pad.l - 5, y + 3);
-    }
-    ctx.textAlign = "center";
-    const step = Math.max(1, Math.floor(data.length / 6));
-    data.forEach((d, i) => {
-      if (i % step === 0 || i === data.length - 1) {
-        const x = pad.l + (cw * i / (data.length - 1 || 1));
-        ctx.fillText(d.label, x, H - 4);
-      }
-    });
-    if (data.length < 2) {
-      const x = pad.l + cw / 2, y = pad.t + ch - (ch * (vals[0] - minV) / range);
-      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
-      return;
-    }
-    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = "round"; ctx.beginPath();
-    data.forEach((d, i) => {
-      const x = pad.l + (cw * i / (data.length - 1));
-      const y = pad.t + ch - (ch * (d.value - minV) / range);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-    const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + ch);
-    grad.addColorStop(0, color + "30"); grad.addColorStop(1, color + "05");
-    ctx.fillStyle = grad; ctx.beginPath();
-    data.forEach((d, i) => {
-      const x = pad.l + (cw * i / (data.length - 1));
-      const y = pad.t + ch - (ch * (d.value - minV) / range);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    });
-    ctx.lineTo(pad.l + cw, pad.t + ch); ctx.lineTo(pad.l, pad.t + ch); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = color;
-    data.forEach((d, i) => {
-      const x = pad.l + (cw * i / (data.length - 1));
-      const y = pad.t + ch - (ch * (d.value - minV) / range);
-      ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
-    });
-  });
-}
-
-// ===== Render =====
-function render() {
-  const app = document.getElementById("app");
-  if (!state.loaded) {
-    app.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:var(--accent)"><p>Loading...</p></div>';
-    return;
-  }
-
-  const pct = roundPct();
-  const streak = getStreak();
-  const isToday = state.selectedDate === todayKey();
-  const statusText = state.saveStatus === "saved" ? "✓ Saved" : state.saveStatus === "saving" ? "Saving..." : "⚠ Error";
-  const statusClass = state.saveStatus === "error" ? "err" : "ok";
-  const roundCount = getRoundCount();
-
-  let html = `
-    <div class="header">
-      <h1>Ankle Strength</h1>
-      <div class="sub">Rebuild · Strengthen · Walk Pain-Free</div>
-      <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-label">Streak</div>
-          <div class="stat-val">${streak} <span>days</span></div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">${isToday ? 'Today' : fmtDate(state.selectedDate)} · R${state.currentRound}</div>
-          <div class="stat-val" style="color:${pct===100?'var(--accent)':'var(--text)'}">${pct}%</div>
-          <div class="progress-track"><div class="progress-fill${pct===100?' done':''}" style="width:${pct}%"></div></div>
-        </div>
-      </div>
-      <div id="save-indicator" class="save-status ${statusClass}">${statusText}</div>
-    </div>
-
-    <div class="tabs">
-      <button class="tab${state.tab==='workout'?' active':''}" onclick="switchTab('workout')">Workout</button>
-      <button class="tab${state.tab==='progress'?' active':''}" onclick="switchTab('progress')">Progress</button>
-      <button class="tab${state.tab==='history'?' active':''}" onclick="switchTab('history')">History</button>
-    </div>
-
-    <div class="content">`;
-
-  if (state.tab === "workout") {
-    // Date picker
-    html += `<div class="date-row">
-      <label>Date:</label>
-      <input type="date" class="date-input" id="date-picker" value="${state.selectedDate}" max="${todayKey()}" onchange="changeDate(this.value)">
-      ${!isToday ? '<button class="date-today-btn" onclick="goToToday()">Today</button>' : ''}
-    </div>`;
-
-    if (!isToday) {
-      html += `<div class="date-past-note">📅 Logging for ${fmtDate(state.selectedDate)}</div>`;
-    }
-
-    // Round selector
-    html += `<div class="round-row">
-      <span class="round-label">Round:</span>
-      <div class="round-tabs">`;
-    for (let r = 1; r <= roundCount; r++) {
-      html += `<button class="round-tab${state.currentRound===r?' active':''}" onclick="switchRound(${r})">${r}</button>`;
-    }
-    html += `</div>
-      <button class="round-add" onclick="addRound()" title="Add another round">+</button>
-    </div>`;
-
-    // Exercises
-    const rd = getCurrentRoundData();
-    EXERCISES.forEach(ex => {
-      const allDone = Array.from({length: ex.sets}, (_, s) => isSetDone(ex.id, s)).every(Boolean);
-      const isOpen = state.expanded === ex.id;
-
-      html += `<div class="card${allDone?' done':''}">
-        <div class="card-head" onclick="toggleExpand('${ex.id}')">
-          <span class="card-emoji">${ex.emoji}</span>
-          <div class="card-info">
-            <div class="card-name">${ex.name}</div>
-            <div class="card-meta">${ex.sets} sets × ${ex.reps} · Rest ${ex.rest}</div>
-          </div>
-          <span class="card-arrow${isOpen?' open':''}">▾</span>
-        </div>`;
-      if (isOpen) {
-        html += `<div class="card-body">
-          <div class="card-instr">${ex.instructions}</div>
-          <div class="tip-box"><span class="tip-label">Tip: </span><span class="tip-text">${ex.tip}</span></div>
-          <div class="card-detail"><strong>Target:</strong> ${ex.muscles}</div>
-          <div class="card-detail"><strong>Next level:</strong> ${ex.progression}</div>
-        </div>`;
-      }
-      html += '<div class="set-row">';
-      for (let s = 0; s < ex.sets; s++) {
-        const done = isSetDone(ex.id, s);
-        html += `<button class="set-btn${done?' done':''}" onclick="event.stopPropagation();toggleSet('${ex.id}',${s})">${done?'✓ ':''}Set ${s+1}</button>`;
-      }
-      html += '</div></div>';
-    });
-
-    // Pain
-    html += `<div class="card">
-      <div style="font-size:14px;font-weight:600;margin-bottom:10px">Ankle Pain Level</div>
-      <div class="pain-row">`;
-    for (let i = 0; i <= 5; i++) {
-      const sel = rd.painLevel === i;
-      html += `<button class="pain-btn${sel?' sel'+i:''}" onclick="setPainLevel(${i})">${i}</button>`;
-    }
-    html += `</div><div class="pain-labels"><span>None</span><span>Severe</span></div></div>`;
-
-    // Notes
-    html += `<div class="card">
-      <div style="font-size:14px;font-weight:600;margin-bottom:8px">Notes</div>
-      <textarea id="notes-input" oninput="setNotes(this.value)" placeholder="How did it feel?">${escHtml(rd.notes)}</textarea>
-
-```
-</div>`;
-
-if (pct === 100) {
-  html += `<div class="complete-banner">
-    <div class="icon">🎉</div>
-    <div class="msg">${roundCount > 1 ? 'Round ' + state.currentRound + ' Complete!' : 'Workout Complete!'}</div>
-    <div class="sub">${roundCount > 1 ? 'Great work on multiple rounds today!' : 'Your ankles thank you.'}</div>
-  </div>`;
-}
-```
-
-} else if (state.tab === “progress”) {
-html += renderProgress();
-} else {
-html += renderHistory();
-}
-
-html += ‘</div>’;
-app.innerHTML = html;
-
-if (state.tab === “progress”) {
-const sorted = […state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
-if (sorted.length > 0) {
-const compData = sorted.map(d => {
-const bestRound = getBestRoundPct(d);
-return { label: shortDate(d.date), value: bestRound };
-});
-drawChart(“chart-completion”, compData, “#2d6a5a”);
-
-```
-  const painData = sorted.filter(d => getAvgPain(d) >= 0).map(d => ({
-    label: shortDate(d.date), value: getAvgPain(d)
-  }));
-  if (painData.length > 0) drawChart("chart-pain", painData, "#c45050");
-}
-```
-
-}
-}
-
-function getBestRoundPct(rec) {
-if (!rec) return 0;
-if (rec.rounds) {
-let best = 0;
-Object.values(rec.rounds).forEach(r => {
-const done = Object.keys(r.completed || {}).length;
-const pct = TOTAL_SETS ? Math.round((done / TOTAL_SETS) * 100) : 0;
-if (pct > best) best = pct;
-});
-return best;
-}
-if (rec.completed) {
-return TOTAL_SETS ? Math.round((Object.keys(rec.completed).length / TOTAL_SETS) * 100) : 0;
-}
+function getBestPct(rec){
+if(!rec)return 0;
+if(rec.rounds){var best=0;var ks=Object.keys(rec.rounds);for(var i=0;i<ks.length;i++){var done=Object.keys(rec.rounds[ks[i]].completed||{}).length;var p=TSETS?Math.round(done/TSETS*100):0;if(p>best)best=p}return best}
+if(rec.completed)return TSETS?Math.round(Object.keys(rec.completed).length/TSETS*100):0;
 return 0;
 }
 
-function getAvgPain(rec) {
-if (!rec) return -1;
-if (rec.rounds) {
-let sum = 0, count = 0;
-Object.values(rec.rounds).forEach(r => {
-if (r.painLevel !== undefined && r.painLevel >= 0) { sum += r.painLevel; count++; }
-});
-return count > 0 ? Math.round((sum / count) * 10) / 10 : -1;
-}
-return rec.painLevel !== undefined ? rec.painLevel : -1;
-}
+function esc(s){return s?s.replace(/&/g,”&”).replace(/</g,”<”).replace(/>/g,”>”).replace(/”/g,”"”):””}
 
-function renderProgress() {
-const sorted = […state.allDays].sort((a, b) => a.date.localeCompare(b.date)).slice(-30);
-if (sorted.length === 0) {
-return ‘<div class="empty"><div class="icon">📊</div><div>Complete your first workout to see progress.</div></div>’;
-}
-
-const totalWorkouts = state.allDays.length;
-const totalRounds = state.allDays.reduce((s, d) => s + getTotalRoundsForDay(d), 0);
-const painDays = state.allDays.filter(d => getAvgPain(d) >= 0);
-const avgPainVal = painDays.length ? (painDays.reduce((s, d) => s + getAvgPain(d), 0) / painDays.length).toFixed(1) : “—”;
-
-let painTrend = “”;
-if (painDays.length >= 4) {
-const half = Math.floor(painDays.length / 2);
-const earlyAvg = painDays.slice(0, half).reduce((s, d) => s + getAvgPain(d), 0) / half;
-const recentAvg = painDays.slice(half).reduce((s, d) => s + getAvgPain(d), 0) / (painDays.length - half);
-const diff = earlyAvg - recentAvg;
-if (diff > 0.3) painTrend = “↓ Improving”;
-else if (diff < -0.3) painTrend = “↑ Worsening”;
-else painTrend = “→ Stable”;
+// ===== Chart =====
+function drawChart(cid,data,color){
+setTimeout(function(){
+var cv=document.getElementById(cid);if(!cv||!data.length)return;
+var ctx=cv.getContext(“2d”);var dpr=window.devicePixelRatio||1;
+var rect=cv.getBoundingClientRect();cv.width=rect.width*dpr;cv.height=rect.height*dpr;
+ctx.scale(dpr,dpr);var W=rect.width,H=rect.height;
+var p={t:10,r:10,b:24,l:30},cw=W-p.l-p.r,ch=H-p.t-p.b;
+var vals=[];for(var i=0;i<data.length;i++)vals.push(data[i].v);
+var mx=Math.max.apply(null,vals.concat([1])),mn=Math.min.apply(null,vals.concat([0])),rng=mx-mn||1;
+ctx.clearRect(0,0,W,H);ctx.strokeStyle=”#eee”;ctx.lineWidth=.5;
+for(var i=0;i<=4;i++){var y=p.t+ch-ch*i/4;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(W-p.r,y);ctx.stroke()}
+ctx.fillStyle=”#aaa”;ctx.font=“10px system-ui,sans-serif”;ctx.textAlign=“right”;
+for(var i=0;i<=4;i++){var y=p.t+ch-ch*i/4;ctx.fillText(Math.round(mn+rng*i/4),p.l-5,y+3)}
+ctx.textAlign=“center”;var step=Math.max(1,Math.floor(data.length/6));
+for(var i=0;i<data.length;i++){if(i%step===0||i===data.length-1){var x=p.l+cw*i/(data.length-1||1);ctx.fillText(data[i].l,x,H-4)}}
+if(data.length<2){var x2=p.l+cw/2,y2=p.t+ch-ch*(vals[0]-mn)/rng;ctx.fillStyle=color;ctx.beginPath();ctx.arc(x2,y2,4,0,Math.PI*2);ctx.fill();return}
+ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin=“round”;ctx.beginPath();
+for(var i=0;i<data.length;i++){var x=p.l+cw*i/(data.length-1),y=p.t+ch-ch*(data[i].v-mn)/rng;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.stroke();
+var g=ctx.createLinearGradient(0,p.t,0,p.t+ch);g.addColorStop(0,color+“30”);g.addColorStop(1,color+“05”);
+ctx.fillStyle=g;ctx.beginPath();
+for(var i=0;i<data.length;i++){var x=p.l+cw*i/(data.length-1),y=p.t+ch-ch*(data[i].v-mn)/rng;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}
+ctx.lineTo(p.l+cw,p.t+ch);ctx.lineTo(p.l,p.t+ch);ctx.closePath();ctx.fill();
+ctx.fillStyle=color;
+for(var i=0;i<data.length;i++){var x=p.l+cw*i/(data.length-1),y=p.t+ch-ch*(data[i].v-mn)/rng;ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill()}
+},50);
 }
 
-let html = `<div class="section-label">Summary</div> <div style="display:flex;gap:8px;margin-bottom:14px"> <div class="stat-box" style="flex:1"><div class="stat-label">Days</div><div class="stat-val" style="font-size:22px">${totalWorkouts}</div></div> <div class="stat-box" style="flex:1"><div class="stat-label">Rounds</div><div class="stat-val" style="font-size:22px">${totalRounds}</div></div> <div class="stat-box" style="flex:1"><div class="stat-label">Avg Pain</div><div class="stat-val" style="font-size:22px">${avgPainVal}</div> ${painTrend ?`<div style="font-size:10px;color:${painTrend.includes('Improving')?'var(--accent)':painTrend.includes('Worsening')?'var(--warn-r)':'var(--text-lt)'};margin-top:2px">${painTrend}</div>` : ''} </div> </div> <div class="section-label">Best Completion % (Last 30 days)</div> <div class="chart-card"><canvas id="chart-completion" class="chart-canvas"></canvas></div> <div class="section-label">Pain Level Over Time</div> <div class="chart-card"><canvas id="chart-pain" class="chart-canvas"></canvas></div>`;
+// ===== Render =====
+function render(){
+var app=document.getElementById(“app”);
+var pct=rdPct(),streak=getStreak(),isToday=S.selDate===todayKey();
+var stTxt=S.saveStatus===“saved”?”\u2713 Saved”:S.saveStatus===“saving”?“Saving…”:”\u26A0 Error”;
+var stCls=S.saveStatus===“error”?“err”:“ok”;
+var rc=rdCount();
+var h=’<div class="header"><h1>Ankle Strength</h1><div class="sub">Rebuild \u00B7 Strengthen \u00B7 Walk Pain-Free</div>’;
+h+=’<div class="stats-row"><div class="stat-box"><div class="stat-label">Streak</div><div class="stat-val">’+streak+’ <span>days</span></div></div>’;
+h+=’<div class="stat-box"><div class="stat-label">’+(isToday?“Today”:fmtDate(S.selDate))+’ \u00B7 R’+S.curRound+’</div>’;
+h+=’<div class="stat-val" style="color:'+(pct===100?'var(--accent)':'var(--text)')+'">’+pct+’%</div>’;
+h+=’<div class="progress-track"><div class="progress-fill'+(pct===100?' done':'')+'" style="width:'+pct+'%"></div></div></div></div>’;
+h+=’<div id="save-ind" class="save-status '+stCls+'">’+stTxt+’</div></div>’;
+h+=’<div class="tabs">’;
+h+=’<button class=“tab’+(S.tab===“workout”?” active”:””)+’” onclick=“doSwitchTab('workout')”>Workout</button>’;
+h+=’<button class=“tab’+(S.tab===“progress”?” active”:””)+’” onclick=“doSwitchTab('progress')”>Progress</button>’;
+h+=’<button class=“tab’+(S.tab===“history”?” active”:””)+’” onclick=“doSwitchTab('history')”>History</button></div>’;
+h+=’<div class="content">’;
 
-html += ‘<div class="section-label">Exercise Completion Rate</div><div class="card">’;
-EXERCISES.forEach(ex => {
-let exDone = 0, exTotal = 0;
-state.allDays.forEach(d => {
-const rounds = d.rounds ? Object.values(d.rounds) : (d.completed ? [{ completed: d.completed }] : []);
-rounds.forEach(r => {
-for (let s = 0; s < ex.sets; s++) {
-exTotal++;
-if (r.completed && r.completed[ex.id + “-s” + s]) exDone++;
-}
-});
-});
-const rate = exTotal ? Math.round((exDone / exTotal) * 100) : 0;
-html += `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"> <span style="font-size:20px">${ex.emoji}</span> <div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:3px">${ex.name}</div> <div class="progress-track"><div class="progress-fill" style="width:${rate}%"></div></div></div> <span style="font-size:13px;font-weight:700;color:${rate>=80?'var(--accent)':'var(--text-mid)'}">${rate}%</span> </div>`;
-});
-html += ‘</div>’;
-return html;
-}
-
-function renderHistory() {
-const days = state.allDays.filter(d => getTotalSetsForDay(d) > 0);
-if (days.length === 0) {
-return ‘<div class="empty"><div class="icon">📋</div><div>No workouts logged yet.</div><div style="font-size:13px;margin-top:4px">Complete a workout to start tracking!</div></div>’;
-}
-
-let html = ‘<div class="section-label">Workout Log</div>’;
-days.forEach(rec => {
-const isToday = rec.date === todayKey();
-const rounds = rec.rounds ? Object.entries(rec.rounds) : (rec.completed ? [[“1”, { completed: rec.completed, painLevel: rec.painLevel, notes: rec.notes }]] : []);
-const painAvg = getAvgPain(rec);
-const totalDone = getTotalSetsForDay(rec);
-const roundCount = rounds.length;
+if(S.tab===“workout”){
+h+=’<div class="date-row"><label>Date:</label><input type="date" class="date-input" value="'+S.selDate+'" max="'+todayKey()+'" onchange="doChangeDate(this)">’;
+if(!isToday)h+=’<button class="date-today-btn" onclick="doGoToday()">Today</button>’;
+h+=’</div>’;
+if(!isToday)h+=’<div class="date-past-note">\u{1F4C5} Logging for ‘+fmtDate(S.selDate)+’</div>’;
 
 ```
-let painBadge = "";
-if (painAvg >= 0) {
-  const cls = painAvg <= 1 ? "low" : painAvg <= 3 ? "med" : "high";
-  painBadge = `<span class="pain-badge ${cls}">Pain: ${painAvg}/5</span>`;
+h+='<div class="round-row"><span class="round-label">Round:</span><div class="round-tabs">';
+for(var r=1;r<=rc;r++)h+='<button class="round-tab'+(S.curRound===r?" active":"")+'" onclick="doSwitchRound('+r+')">'+r+'</button>';
+h+='</div><button class="round-add" onclick="doAddRound()">+</button></div>';
+
+var rd=curRd();
+for(var ei=0;ei<EX.length;ei++){
+  var ex=EX[ei];
+  var allDone=true;for(var si=0;si<ex.sets;si++)if(!isSetDone(ex.id,si))allDone=false;
+  var isOpen=S.expanded===ex.id;
+  h+='<div class="card'+(allDone?" done":"")+'">';
+  h+='<div class="card-head" onclick="doToggleEx(\''+ex.id+'\')">';
+  h+='<span class="card-emoji">'+ex.emoji+'</span><div style="flex:1">';
+  h+='<div class="card-name">'+ex.name+'</div>';
+  h+='<div class="card-meta">'+ex.sets+' sets \u00D7 '+ex.reps+' \u00B7 Rest '+ex.rest+'</div></div>';
+  h+='<span class="card-arrow'+(isOpen?" open":"")+'">\u25BE</span></div>';
+  if(isOpen){
+    h+='<div class="card-body"><div class="card-instr">'+ex.inst+'</div>';
+    h+='<div class="tip-box"><span class="tip-label">Tip: </span><span class="tip-text">'+ex.tip+'</span></div>';
+    h+='<div class="card-detail"><strong>Target:</strong> '+ex.muscles+'</div>';
+    h+='<div class="card-detail"><strong>Next level:</strong> '+ex.prog+'</div></div>';
+  }
+  h+='<div class="set-row">';
+  for(var si=0;si<ex.sets;si++){var dn=isSetDone(ex.id,si);h+='<button class="set-btn'+(dn?" done":"")+'" onclick="event.stopPropagation();doToggleSet(\''+ex.id+'\','+si+')">'+(dn?"\u2713 ":"")+"Set "+(si+1)+"</button>"}
+  h+='</div></div>';
 }
 
-html += `<div class="hist-card">
-  <div class="hist-top">
-    <div><span class="hist-date">${isToday ? 'Today' : fmtDate(rec.date)}</span>${painBadge}</div>
-    <span class="hist-score ${totalDone >= TOTAL_SETS ? 'full' : 'partial'}">${roundCount > 1 ? roundCount + ' rounds' : totalDone + '/' + TOTAL_SETS}</span>
-  </div>`;
+h+='<div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:10px">Ankle Pain Level</div><div class="pain-row">';
+for(var pi=0;pi<=5;pi++){var sel=rd.painLevel===pi;h+='<button class="pain-btn'+(sel?" s"+pi:"")+'" onclick="doSetPain('+pi+')">'+pi+'</button>'}
+h+='</div><div class="pain-labels"><span>None</span><span>Severe</span></div></div>';
 
-rounds.forEach(([rNum, rd]) => {
-  const done = Object.keys(rd.completed || {}).length;
-  const pct = TOTAL_SETS ? Math.round((done / TOTAL_SETS) * 100) : 0;
+h+='<div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:8px">Notes</div>';
+h+='<textarea oninput="doSetNotes(this)" placeholder="How did it feel?">'+esc(rd.notes)+'</textarea></div>';
 
-  if (roundCount > 1) {
-    html += `<div style="font-size:11px;font-weight:600;color:var(--text-mid);margin-top:8px">Round ${rNum} — ${done}/${TOTAL_SETS}</div>`;
-  }
-
-  html += `<div class="hist-bar"><div class="hist-bar-fill${pct===100?' full':''}" style="width:${pct}%"></div></div>`;
-  html += '<div class="hist-exercises">';
-  EXERCISES.forEach(ex => {
-    const exDone = Array.from({length: ex.sets}, (_, s) => !!(rd.completed && rd.completed[ex.id + "-s" + s])).every(Boolean);
-    html += `<span class="hist-ex${exDone?'':' missed'}">${ex.emoji} ${ex.name}</span>`;
-  });
-  html += '</div>';
-
-  if (rd.notes) {
-    html += `<div class="hist-note">"${escHtml(rd.notes)}"</div>`;
-  }
-});
-
-html += '</div>';
+if(pct===100){
+  h+='<div class="complete-banner"><div style="font-size:34px;margin-bottom:6px">\u{1F389}</div>';
+  h+='<div style="font-size:17px;font-weight:700;color:var(--accent)">'+(rc>1?"Round "+S.curRound+" Complete!":"Workout Complete!")+'</div>';
+  h+='<div style="font-size:12px;color:var(--text-mid);margin-top:3px">Your ankles thank you.</div></div>';
+}
 ```
 
-});
-return html;
+}else if(S.tab===“progress”){
+var sorted=S.allDays.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0}).slice(-30);
+if(!sorted.length){
+h+=’<div class="empty"><div style="font-size:34px;margin-bottom:10px">\u{1F4CA}</div><div>Complete your first workout to see progress.</div></div>’;
+}else{
+var tw=S.allDays.length;
+var tr=0;for(var i=0;i<S.allDays.length;i++){var r=S.allDays[i].rounds?Object.keys(S.allDays[i].rounds).length:(S.allDays[i].completed?1:0);tr+=r}
+var pDays=[];for(var i=0;i<S.allDays.length;i++){var ap=getAvgPain(S.allDays[i]);if(ap>=0)pDays.push(ap)}
+var avgP=pDays.length?(pDays.reduce(function(a,b){return a+b},0)/pDays.length).toFixed(1):”\u2014”;
+var pTrend=””;
+if(pDays.length>=4){var half=Math.floor(pDays.length/2);var e=0,r2=0;for(var i=0;i<half;i++)e+=pDays[i];e/=half;for(var i=half;i<pDays.length;i++)r2+=pDays[i];r2/=(pDays.length-half);var df=e-r2;pTrend=df>.3?”\u2193 Improving”:df<-.3?”\u2191 Worsening”:”\u2192 Stable”}
+
+```
+  h+='<div class="section-label">Summary</div><div style="display:flex;gap:8px;margin-bottom:14px">';
+  h+='<div class="stat-box" style="flex:1"><div class="stat-label">Days</div><div class="stat-val" style="font-size:22px">'+tw+'</div></div>';
+  h+='<div class="stat-box" style="flex:1"><div class="stat-label">Rounds</div><div class="stat-val" style="font-size:22px">'+tr+'</div></div>';
+  h+='<div class="stat-box" style="flex:1"><div class="stat-label">Avg Pain</div><div class="stat-val" style="font-size:22px">'+avgP+'</div>';
+  if(pTrend)h+='<div style="font-size:10px;color:'+(pTrend.indexOf("Improving")>=0?"var(--accent)":pTrend.indexOf("Worsening")>=0?"var(--warn-r)":"var(--text-lt)")+';margin-top:2px">'+pTrend+'</div>';
+  h+='</div></div>';
+
+  h+='<div class="section-label">Best Completion % (Last 30 days)</div><div class="chart-card"><canvas id="ch-comp" class="chart-canvas"></canvas></div>';
+  h+='<div class="section-label">Pain Level Over Time</div><div class="chart-card"><canvas id="ch-pain" class="chart-canvas"></canvas></div>';
+
+  h+='<div class="section-label">Exercise Completion Rate</div><div class="card">';
+  for(var ei=0;ei<EX.length;ei++){
+    var ex=EX[ei],ed=0,et=0;
+    for(var di=0;di<S.allDays.length;di++){
+      var d=S.allDays[di];
+      var rnds=d.rounds?Object.keys(d.rounds):d.completed?["_"]:[];
+      for(var ri=0;ri<rnds.length;ri++){
+        var comp=d.rounds?d.rounds[rnds[ri]].completed||{}:d.completed||{};
+        for(var si=0;si<ex.sets;si++){et++;if(comp[ex.id+"-s"+si])ed++}
+      }
+    }
+    var rate=et?Math.round(ed/et*100):0;
+    h+='<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><span style="font-size:20px">'+ex.emoji+'</span>';
+    h+='<div style="flex:1"><div style="font-size:13px;font-weight:600;margin-bottom:3px">'+ex.name+'</div>';
+    h+='<div class="progress-track"><div class="progress-fill" style="width:'+rate+'%"></div></div></div>';
+    h+='<span style="font-size:13px;font-weight:700;color:'+(rate>=80?"var(--accent)":"var(--text-mid)")+'">'+rate+'%</span></div>';
+  }
+  h+='</div>';
+}
+```
+
+}else{
+var days=[];for(var i=0;i<S.allDays.length;i++)if(totalSetsDay(S.allDays[i])>0)days.push(S.allDays[i]);
+if(!days.length){
+h+=’<div class="empty"><div style="font-size:34px;margin-bottom:10px">\u{1F4CB}</div><div>No workouts logged yet.</div></div>’;
+}else{
+h+=’<div class="section-label">Workout Log</div>’;
+for(var di=0;di<days.length;di++){
+var rec=days[di],isTd=rec.date===todayKey();
+var rounds=rec.rounds?Object.keys(rec.rounds):rec.completed?[“1”]:[];
+var pa=getAvgPain(rec),td=totalSetsDay(rec);
+var pb=””;if(pa>=0){var cls=pa<=1?“low”:pa<=3?“med”:“high”;pb=’<span class="pain-badge '+cls+'">Pain: ‘+pa+’/5</span>’}
+h+=’<div class="hist-card"><div class="hist-top"><div><span class="hist-date">’+(isTd?“Today”:fmtDate(rec.date))+’</span>’+pb+’</div>’;
+h+=’<span class=“hist-score ‘+(td>=TSETS?“full”:“partial”)+’”>’+(rounds.length>1?rounds.length+” rounds”:td+”/”+TSETS)+’</span></div>’;
+for(var ri=0;ri<rounds.length;ri++){
+var rk=rounds[ri];
+var rd2=rec.rounds?rec.rounds[rk]:{completed:rec.completed||{},painLevel:rec.painLevel,notes:rec.notes};
+var dn2=Object.keys(rd2.completed||{}).length,p2=TSETS?Math.round(dn2/TSETS*100):0;
+if(rounds.length>1)h+=’<div style="font-size:11px;font-weight:600;color:var(--text-mid);margin-top:8px">Round ‘+rk+’ \u2014 ‘+dn2+’/’+TSETS+’</div>’;
+h+=’<div class="hist-bar"><div class=“hist-bar-fill’+(p2===100?” full”:””)+’” style=“width:’+p2+’%”></div></div>’;
+h+=’<div class="hist-exercises">’;
+for(var ei=0;ei<EX.length;ei++){var ex=EX[ei];var ok=true;for(var si=0;si<ex.sets;si++)if(!(rd2.completed&&rd2.completed[ex.id+”-s”+si]))ok=false;
+h+=’<span class=“hist-ex’+(ok?””:” missed”)+’”>’+ex.emoji+” “+ex.name+’</span>’}
+h+=’</div>’;
+if(rd2.notes)h+=’<div class="hist-note">\u201C’+esc(rd2.notes)+’\u201D</div>’;
+}
+h+=’</div>’;
+}
+}
 }
 
-function escHtml(s) {
-if (!s) return “”;
-return s.replace(/&/g,”&”).replace(/</g,”<”).replace(/>/g,”>”).replace(/”/g,”"”);
-}
+h+=’</div>’;
+app.innerHTML=h;
 
-// Global handlers
-window.switchTab = function(t) { state.tab = t; render(); };
-window.toggleExpand = function(id) { state.expanded = state.expanded === id ? null : id; render(); };
-window.toggleSet = toggleSet;
-window.setPainLevel = setPainLevel;
-window.setNotes = setNotes;
-window.addRound = addRound;
-window.switchRound = switchRound;
-window.changeDate = changeDate;
-window.goToToday = goToToday;
+// Draw charts
+if(S.tab===“progress”){
+var sorted=S.allDays.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0}).slice(-30);
+if(sorted.length){
+var cd=[];for(var i=0;i<sorted.length;i++)cd.push({l:shortDate(sorted[i].date),v:getBestPct(sorted[i])});
+drawChart(“ch-comp”,cd,”#2d6a5a”);
+var pd=[];for(var i=0;i<sorted.length;i++){var ap=getAvgPain(sorted[i]);if(ap>=0)pd.push({l:shortDate(sorted[i].date),v:ap})}
+if(pd.length)drawChart(“ch-pain”,pd,”#c45050”);
+}
+}
+}
 
 init();
+
+}catch(e){
+document.getElementById(“app”).innerHTML=’<div style="padding:40px 20px;color:#c45050"><h2>Error</h2><p>’+e.message+’</p><p>’+e.stack+’</p></div>’;
+}
+})();
 </script>
 
 </body>
