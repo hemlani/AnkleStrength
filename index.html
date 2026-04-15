@@ -187,24 +187,24 @@ return idbLoadAll().catch(function(){useLS=true;return lsLoadAll()});
 
 // ===== Exercises =====
 var EX=[
-{id:“calf-raises”,name:“Calf Raises”,em:“🦵”,sets:2,reps:“12-15”,rest:“30s”,
+{id:“calf-raises”,name:“Calf Raises”,em:”\u{1F9B5}”,sets:2,reps:“12-15”,rest:“30s”,
 inst:“Stand flat. Rise onto your toes as high as you can. Hold 1 sec at top. Slowly lower.”,
 tip:“Don’t rush the lowering phase.”,prog:“Move to a stair edge.”,muscles:“Calves”},
-{id:“tibialis-raises”,name:“Tibialis Raises”,em:“🦿”,sets:2,reps:“15-20”,rest:“30s”,
+{id:“tibialis-raises”,name:“Tibialis Raises”,em:”\u{1F9BF}”,sets:2,reps:“15-20”,rest:“30s”,
 inst:“Lean back against a wall. Feet 12 inches out. Lift toes toward shins, then lower slowly.”,
 tip:“Feel the burn in the front of your shins.”,prog:“Add a light dumbbell on foot.”,muscles:“Front of shin”},
-{id:“ankle-alphabet”,name:“Ankle Alphabet”,em:“🔤”,sets:1,reps:“A-Z each foot”,rest:”—”,
+{id:“ankle-alphabet”,name:“Ankle Alphabet”,em:”\u{1F524}”,sets:1,reps:“A-Z each foot”,rest:”\u2014”,
 inst:“Sit in a chair. Lift one foot. Trace each letter A-Z in the air with your big toe. Switch feet.”,
 tip:“Make the letters big and deliberate.”,prog:“Add an ankle weight.”,muscles:“Ankle stabilizers”},
-{id:“single-leg-balance”,name:“Single Leg Balance”,em:“🧘”,sets:2,reps:“30-60s / leg”,rest:“15s”,
+{id:“single-leg-balance”,name:“Single Leg Balance”,em:”\u{1F9D8}”,sets:2,reps:“30-60s / leg”,rest:“15s”,
 inst:“Stand on one foot. Eyes forward, core engaged. Hold up to 60 seconds. Switch legs.”,
 tip:“Too easy? Close your eyes or stand on a towel.”,prog:“Try on a pillow.”,muscles:“Proprioceptors”},
-{id:“heel-walks”,name:“Heel Walks”,em:“🚶”,sets:2,reps:“30 steps”,rest:“20s”,
+{id:“heel-walks”,name:“Heel Walks”,em:”\u{1F6B6}”,sets:2,reps:“30 steps”,rest:“20s”,
 inst:“Walk forward on your heels with toes lifted. Short, controlled steps.”,
 tip:“Arms out for balance.”,prog:“Increase to 50 steps.”,muscles:“Dorsiflexors”},
-{id:“toe-spreads”,name:“Toe Spreads & Curls”,em:“🦶”,sets:2,reps:“15 / foot”,rest:“20s”,
+{id:“toe-spreads”,name:“Toe Spreads & Curls”,em:”\u{1F9B6}”,sets:2,reps:“15 / foot”,rest:“20s”,
 inst:“Barefoot: spread all toes wide, hold 2 sec. Curl them like gripping the floor, hold 2 sec. That’s 1 rep.”,
-tip:“It gets easier fast — that’s the weak muscles waking up.”,prog:“Do them standing on one leg.”,muscles:“Foot muscles”}
+tip:“It gets easier fast \u2014 that’s the weak muscles waking up.”,prog:“Do them standing on one leg.”,muscles:“Foot muscles”}
 ];
 var TSETS=0;
 for(var i=0;i<EX.length;i++) TSETS+=EX[i].sets;
@@ -294,9 +294,9 @@ updStatus();
 function updStatus(){
 var el=document.getElementById(“sav”);
 if(!el) return;
-if(S.saveStatus===“saved”){el.textContent=“✓ Saved”;el.className=“save-ind save-ok”}
-else if(S.saveStatus===“saving”){el.textContent=“Saving…”;el.className=“save-ind save-ok”}
-else{el.textContent=“⚠ Save failed”;el.className=“save-ind save-err”}
+if(S.saveStatus===“saved”){el.textContent=”\u2713 Saved”;el.className=“save-ind save-ok”}
+else if(S.saveStatus===“saving”){el.textContent=“Saving\u2026”;el.className=“save-ind save-ok”}
+else{el.textContent=”\u26A0 Save failed”;el.className=“save-ind save-err”}
 }
 
 // ===== Actions (global) =====
@@ -398,47 +398,45 @@ for(var i=1;i<vals.length;i++){if(vals[i]>mx)mx=vals[i];if(vals[i]<mn)mn=vals[i]
 if(mx<1)mx=1;if(mn>0)mn=0;
 var rng=mx-mn;if(!rng)rng=1;
 
-```
 ctx.clearRect(0,0,W,H);
-ctx.strokeStyle="#eee";ctx.lineWidth=.5;
+ctx.strokeStyle=”#eee”;ctx.lineWidth=.5;
 for(var i=0;i<=4;i++){var y=P.t+ch-ch*i/4;ctx.beginPath();ctx.moveTo(P.l,y);ctx.lineTo(W-P.r,y);ctx.stroke()}
-ctx.fillStyle="#aaa";ctx.font="10px system-ui,sans-serif";ctx.textAlign="right";
+ctx.fillStyle=”#aaa”;ctx.font=“10px system-ui,sans-serif”;ctx.textAlign=“right”;
 for(var i=0;i<=4;i++){var y=P.t+ch-ch*i/4;ctx.fillText(Math.round(mn+rng*i/4),P.l-5,y+3)}
-ctx.textAlign="center";
+ctx.textAlign=“center”;
 var step=Math.max(1,Math.floor(data.length/6));
 for(var i=0;i<data.length;i++){
-  if(i%step===0||i===data.length-1){
-    var x=data.length>1?P.l+cw*i/(data.length-1):P.l+cw/2;
-    ctx.fillText(data[i].l,x,H-4);
-  }
+if(i%step===0||i===data.length-1){
+var x=data.length>1?P.l+cw*i/(data.length-1):P.l+cw/2;
+ctx.fillText(data[i].l,x,H-4);
+}
 }
 if(data.length<2){
-  var x2=P.l+cw/2,y2=P.t+ch-ch*(vals[0]-mn)/rng;
-  ctx.fillStyle=color;ctx.beginPath();ctx.arc(x2,y2,4,0,Math.PI*2);ctx.fill();return;
+var x2=P.l+cw/2,y2=P.t+ch-ch*(vals[0]-mn)/rng;
+ctx.fillStyle=color;ctx.beginPath();ctx.arc(x2,y2,4,0,Math.PI*2);ctx.fill();return;
 }
-ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin="round";ctx.beginPath();
+ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin=“round”;ctx.beginPath();
 for(var i=0;i<data.length;i++){
-  var x=P.l+cw*i/(data.length-1);
-  var y=P.t+ch-ch*(data[i].v-mn)/rng;
-  if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+var x=P.l+cw*i/(data.length-1);
+var y=P.t+ch-ch*(data[i].v-mn)/rng;
+if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
 }
 ctx.stroke();
 var g=ctx.createLinearGradient(0,P.t,0,P.t+ch);
-g.addColorStop(0,color+"30");g.addColorStop(1,color+"05");
+g.addColorStop(0,color+“30”);g.addColorStop(1,color+“05”);
 ctx.fillStyle=g;ctx.beginPath();
 for(var i=0;i<data.length;i++){
-  var x=P.l+cw*i/(data.length-1);
-  var y=P.t+ch-ch*(data[i].v-mn)/rng;
-  if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+var x=P.l+cw*i/(data.length-1);
+var y=P.t+ch-ch*(data[i].v-mn)/rng;
+if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
 }
 ctx.lineTo(P.l+cw,P.t+ch);ctx.lineTo(P.l,P.t+ch);ctx.closePath();ctx.fill();
 ctx.fillStyle=color;
 for(var i=0;i<data.length;i++){
-  var x=P.l+cw*i/(data.length-1);
-  var y=P.t+ch-ch*(data[i].v-mn)/rng;
-  ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
+var x=P.l+cw*i/(data.length-1);
+var y=P.t+ch-ch*(data[i].v-mn)/rng;
+ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);ctx.fill();
 }
-```
 
 },60);
 }
@@ -447,13 +445,13 @@ for(var i=0;i<data.length;i++){
 function render(){
 var el=document.getElementById(“app”);
 var pct=rdPct(),streak=getStreak(),isToday=S.selDate===todayKey();
-var stTxt=S.saveStatus===“saved”?“✓ Saved”:S.saveStatus===“saving”?“Saving…”:“⚠ Error”;
+var stTxt=S.saveStatus===“saved”?”\u2713 Saved”:S.saveStatus===“saving”?“Saving\u2026”:”\u26A0 Error”;
 var stCls=S.saveStatus===“error”?“save-ind save-err”:“save-ind save-ok”;
 var rc=rdCount();
 
-var h=’<div class="header"><h1>Ankle Strength</h1><div class="sub">Rebuild · Strengthen · Walk Pain-Free</div>’;
+var h=’<div class="header"><h1>Ankle Strength</h1><div class="sub">Rebuild \u00B7 Strengthen \u00B7 Walk Pain-Free</div>’;
 h+=’<div class="stats-row"><div class="stat-box"><div class="stat-label">Streak</div><div class="stat-val">’+streak+’ <span>days</span></div></div>’;
-h+=’<div class="stat-box"><div class="stat-label">’+(isToday?“Today”:fmtDate(S.selDate))+’ · R’+S.curRound+’</div>’;
+h+=’<div class="stat-box"><div class="stat-label">’+(isToday?“Today”:fmtDate(S.selDate))+’ \u00B7 R’+S.curRound+’</div>’;
 h+=’<div class="stat-val" style="color:'+(pct===100?'var(--accent)':'var(--text)')+'">’+pct+’%</div>’;
 h+=’<div class="ptrack"><div class="pfill'+(pct===100?' done':'')+'" style="width:'+pct+'%"></div></div></div></div>’;
 h+=’<div id="sav" class="'+stCls+'">’+stTxt+’</div></div>’;
@@ -479,7 +477,7 @@ var h=’’;
 h+=’<div class="daterow"><label>Date:</label><input type="date" class="dateinp" value="'+S.selDate+'" max="'+todayKey()+'" onchange="A.date(this)">’;
 if(!isToday) h+=’<button class="todaybtn" onclick="A.today()">Today</button>’;
 h+=’</div>’;
-if(!isToday) h+=’<div class="pastnote">📅 Logging for ‘+fmtDate(S.selDate)+’</div>’;
+if(!isToday) h+=’<div class="pastnote">\u{1F4C5} Logging for ‘+fmtDate(S.selDate)+’</div>’;
 
 h+=’<div class="rndrow"><span class="rndlbl">Round:</span><div class="rndtabs">’;
 for(var r=1;r<=rc;r++) h+=’<button class=“rndtab’+(S.curRound===r?” on”:””)+’” onclick=“A.round(’+r+’)”>’+r+’</button>’;
@@ -494,7 +492,7 @@ h+=’<div class=“card’+(allDn?” dn”:””)+’”>’;
 h+=’<div class="chead" onclick="A.expand(\''+ex.id+'\')">’;
 h+=’<span class="cemoji">’+ex.em+’</span><div style="flex:1">’;
 h+=’<div class="cname">’+ex.name+’</div>’;
-h+=’<div class="cmeta">’+ex.sets+’ sets × ‘+ex.reps+’ · Rest ‘+ex.rest+’</div></div>’;
+h+=’<div class="cmeta">’+ex.sets+’ sets \u00D7 ‘+ex.reps+’ \u00B7 Rest ‘+ex.rest+’</div></div>’;
 h+=’<span class=“carrow’+(isOpen?” open”:””)+’”>▾</span></div>’;
 if(isOpen){
 h+=’<div class="cbody"><div class="cinstr">’+ex.inst+’</div>’;
@@ -505,7 +503,7 @@ h+=’<div class="cdetail"><strong>Next level:</strong> ‘+ex.prog+’</div></d
 h+=’<div class="setrow">’;
 for(var si=0;si<ex.sets;si++){
 var dn=isDone(ex.id,si);
-h+=’<button class=“setbtn’+(dn?” dn”:””)+’” onclick=“event.stopPropagation();A.set('’+ex.id+’',’+si+’)”>’+(dn?“✓ “:””)+“Set “+(si+1)+”</button>”;
+h+=’<button class=“setbtn’+(dn?” dn”:””)+’” onclick=“event.stopPropagation();A.set('’+ex.id+’',’+si+’)”>’+(dn?”\u2713 “:””)+“Set “+(si+1)+”</button>”;
 }
 h+=’</div></div>’;
 }
@@ -521,7 +519,7 @@ h+=’<div class="card"><div style="font-size:14px;font-weight:600;margin-bottom
 h+=’<textarea oninput="A.notes(this)" placeholder="How did it feel?">’+esc(rd.notes)+’</textarea></div>’;
 
 if(pct===100){
-h+=’<div class="banner"><div style="font-size:34px;margin-bottom:6px">🎉</div>’;
+h+=’<div class="banner"><div style="font-size:34px;margin-bottom:6px">\u{1F389}</div>’;
 h+=’<div style="font-size:17px;font-weight:700;color:var(--accent)">’+(rc>1?“Round “+S.curRound+” Complete!”:“Workout Complete!”)+’</div>’;
 h+=’<div style="font-size:12px;color:var(--text-mid);margin-top:3px">Your ankles thank you.</div></div>’;
 }
@@ -530,19 +528,19 @@ return h;
 
 function renderProgress(){
 var sorted=S.allDays.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0}).slice(-30);
-if(!sorted.length) return ‘<div class="empty"><div style="font-size:34px;margin-bottom:10px">📊</div><div>Complete your first workout to see progress.</div></div>’;
+if(!sorted.length) return ‘<div class="empty"><div style="font-size:34px;margin-bottom:10px">\u{1F4CA}</div><div>Complete your first workout to see progress.</div></div>’;
 
 var tw=S.allDays.length;
 var tr=0;for(var i=0;i<S.allDays.length;i++) tr+=totalRoundsDay(S.allDays[i]);
 var pDays=[];for(var i=0;i<S.allDays.length;i++){var ap=avgPain(S.allDays[i]);if(ap>=0)pDays.push(ap)}
-var avgP=pDays.length?(pDays.reduce(function(a,b){return a+b},0)/pDays.length).toFixed(1):”—”;
+var avgP=pDays.length?(pDays.reduce(function(a,b){return a+b},0)/pDays.length).toFixed(1):”\u2014”;
 var pTrend=””;
 if(pDays.length>=4){
 var half=Math.floor(pDays.length/2);
 var ea=0;for(var i=0;i<half;i++)ea+=pDays[i];ea/=half;
 var ra=0;for(var i=half;i<pDays.length;i++)ra+=pDays[i];ra/=(pDays.length-half);
 var df=ea-ra;
-pTrend=df>.3?“↓ Improving”:df<-.3?“↑ Worsening”:“→ Stable”;
+pTrend=df>.3?”\u2193 Improving”:df<-.3?”\u2191 Worsening”:”\u2192 Stable”;
 }
 
 var h=’<div class="slabel">Summary</div><div style="display:flex;gap:8px;margin-bottom:14px">’;
@@ -590,7 +588,7 @@ if(pd.length) drawChart(“ch2”,pd,”#c45050”);
 
 function renderHistory(){
 var days=[];for(var i=0;i<S.allDays.length;i++) if(totalSetsDay(S.allDays[i])>0) days.push(S.allDays[i]);
-if(!days.length) return ‘<div class="empty"><div style="font-size:34px;margin-bottom:10px">📋</div><div>No workouts logged yet.</div></div>’;
+if(!days.length) return ‘<div class="empty"><div style="font-size:34px;margin-bottom:10px">\u{1F4CB}</div><div>No workouts logged yet.</div></div>’;
 
 var h=’<div class="slabel">Workout Log</div>’;
 for(var di=0;di<days.length;di++){
@@ -602,25 +600,23 @@ if(pa>=0){var cls=pa<=1?“low”:pa<=3?“med”:“high”;pb=’<span class="
 h+=’<div class="hcard"><div class="htop"><div><span class="hdate">’+(isTd?“Today”:fmtDate(rec.date))+’</span>’+pb+’</div>’;
 h+=’<span class=“hscore ‘+(td>=TSETS?“full”:“part”)+’”>’+(rounds.length>1?rounds.length+” rounds”:td+”/”+TSETS)+’</span></div>’;
 
-```
 for(var ri=0;ri<rounds.length;ri++){
-  var rk=rounds[ri];
-  var rd2=rec.rounds?(rec.rounds[rk]||{completed:{},painLevel:-1,notes:""}):{completed:rec.completed||{},painLevel:rec.painLevel,notes:rec.notes};
-  var dn2=Object.keys(rd2.completed||{}).length;
-  var p2=TSETS?Math.round(dn2/TSETS*100):0;
-  if(rounds.length>1) h+='<div style="font-size:11px;font-weight:600;color:var(--text-mid);margin-top:8px">Round '+rk+' — '+dn2+'/'+TSETS+'</div>';
-  h+='<div class="hbar"><div class="hbarfill'+(p2===100?" full":"")+'" style="width:'+p2+'%"></div></div>';
-  h+='<div class="hexes">';
-  for(var ei=0;ei<EX.length;ei++){
-    var ex=EX[ei];var ok=true;
-    for(var si=0;si<ex.sets;si++) if(!((rd2.completed||{})[ex.id+"-s"+si])) ok=false;
-    h+='<span class="hex'+(ok?"":" miss")+'">'+ex.em+" "+ex.name+'</span>';
-  }
-  h+='</div>';
-  if(rd2.notes) h+='<div class="hnote">"'+esc(rd2.notes)+'"</div>';
+var rk=rounds[ri];
+var rd2=rec.rounds?(rec.rounds[rk]||{completed:{},painLevel:-1,notes:””}):{completed:rec.completed||{},painLevel:rec.painLevel,notes:rec.notes};
+var dn2=Object.keys(rd2.completed||{}).length;
+var p2=TSETS?Math.round(dn2/TSETS*100):0;
+if(rounds.length>1) h+=’<div style="font-size:11px;font-weight:600;color:var(--text-mid);margin-top:8px">Round ‘+rk+’ \u2014 ‘+dn2+’/’+TSETS+’</div>’;
+h+=’<div class="hbar"><div class=“hbarfill’+(p2===100?” full”:””)+’” style=“width:’+p2+’%”></div></div>’;
+h+=’<div class="hexes">’;
+for(var ei=0;ei<EX.length;ei++){
+var ex=EX[ei];var ok=true;
+for(var si=0;si<ex.sets;si++) if(!((rd2.completed||{})[ex.id+”-s”+si])) ok=false;
+h+=’<span class=“hex’+(ok?””:” miss”)+’”>’+ex.em+” “+ex.name+’</span>’;
 }
-h+='</div>';
-```
+h+=’</div>’;
+if(rd2.notes) h+=’<div class="hnote">”\u201C’+esc(rd2.notes)+’\u201D”</div>’;
+}
+h+=’</div>’;
 
 }
 return h;
