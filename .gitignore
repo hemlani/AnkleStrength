@@ -1,0 +1,4 @@
+node_modules/
+screenshots/
+install-browser.log
+package-lock.json

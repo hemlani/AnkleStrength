@@ -1,0 +1,13 @@
+{
+  "name": "show-up",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Show Up — joint-friendly workout PWA. The whole app lives in index.html.",
+  "scripts": {
+    "check": "node tools/check.mjs",
+    "shot": "node tools/shot.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.0"
+  }
+}
