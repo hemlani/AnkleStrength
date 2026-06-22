@@ -149,8 +149,13 @@ textarea.t{min-height:64px;resize:vertical;line-height:1.5}
 .setb{flex:1;min-width:74px;padding:18px 0;border-radius:13px;border:1px solid var(--border);background:var(--panel2);
   color:var(--muted);font-weight:800;font-size:15px}
 .setb.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.extimer{display:flex;align-items:center;justify-content:space-between;background:var(--accent-soft);
+  border:1px solid var(--accent-d);border-radius:13px;padding:12px 15px;margin-top:14px}
+.extimer .el{font-size:13px;font-weight:700;color:var(--accent)}
+.extimer .ev{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--text)}
 .rest{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--border);
   border-radius:13px;padding:12px;margin:14px 0}
+.rest .lbl{font-size:11px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.5px;margin-right:2px}
 .rest .clk{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;min-width:64px;text-align:center;color:var(--accent)}
 .rest .rb{padding:9px 12px;border-radius:9px;background:var(--panel2);border:1px solid var(--border);font-weight:800;font-size:14px}
 .pnav{display:flex;gap:9px;margin:14px 0}
@@ -556,7 +561,7 @@ function startSession(mode){
   var order=r.exercises.map(function(e){return e.id;});
   var perEx={};
   r.exercises.forEach(function(e){perEx[e.id]={sets:[],weight:e.weight||'',reps:'',notes:'',skipped:false};});
-  state.active={id:'a'+Date.now(),date:todayKey(),routineId:r.id,startedAt:Date.now(),mode:mode,order:order,idx:0,perEx:perEx,notes:'',restEnd:null};
+  state.active={id:'a'+Date.now(),date:todayKey(),routineId:r.id,startedAt:Date.now(),mode:mode,order:order,idx:0,perEx:perEx,notes:'',restEnd:null,exStart:Date.now()};
   saveActive();
   state.view='player';render();
 }
@@ -583,6 +588,7 @@ function renderPlayer(){
   h+='<div class="pemoji">'+ex.em+'</div>';
   h+='<div class="pname">'+esc(ex.name)+'</div>';
   h+='<div class="pmeta">'+ex.sets+' × '+esc(ex.reps)+'</div>';
+  h+='<div class="extimer"><span class="el">⏱ Time on this exercise</span><span class="ev" id="exClock">'+fmtClock(a.exStart?Math.max(0,Math.floor((Date.now()-a.exStart)/1000)):0)+'</span></div>';
   h+='<div class="desc muted" style="margin-top:12px;font-size:14px;line-height:1.55">'+esc(ex.instructions)+'</div>';
   h+='<div class="why"><div class="l">Why this helps me</div><div class="t">'+esc(ex.whyItHelps)+'</div></div>';
   h+='<button class="watch" onclick="A.watch(\''+a.routineId+'\',\''+ex.id+'\')"><span class="pl">▶</span> Watch demo</button>';
@@ -604,7 +610,7 @@ function renderPlayer(){
 
   // rest timer
   var remaining=a.restEnd?Math.max(0,Math.ceil((a.restEnd-Date.now())/1000)):0;
-  h+='<div class="rest"><span class="clk" id="restClock">'+fmtClock(remaining||state.settings.restDefault)+'</span>'+
+  h+='<div class="rest"><span class="lbl">Rest</span><span class="clk" id="restClock">'+fmtClock(remaining||state.settings.restDefault)+'</span>'+
     '<button class="rb" onclick="A.rest(-15)">−15s</button>'+
     '<button class="rb" onclick="A.rest(15)">+15s</button>'+
     (remaining>0?'<button class="rb" style="flex:1;color:var(--accent)" onclick="A.restStop()">Stop</button>'
@@ -630,19 +636,32 @@ function renderPlayer(){
   return h;
 }
 function fmtClock(s){var m=Math.floor(s/60);var ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
-var restInt=null;
-function tickRest(){
-  clearInterval(restInt);
-  if(!state.active||!state.active.restEnd)return;
-  restInt=setInterval(function(){
-    var el=document.getElementById('restClock');
-    if(!el||!state.active||!state.active.restEnd){clearInterval(restInt);return;}
-    var rem=Math.ceil((state.active.restEnd-Date.now())/1000);
-    if(rem<=0){clearInterval(restInt);state.active.restEnd=null;saveActive();if(navigator.vibrate)navigator.vibrate(180);if(state.view==='player')render();return;}
-    el.textContent=fmtClock(rem);
-  },250);
+var uiInt=null;
+function startUITick(){clearInterval(uiInt);uiInt=setInterval(updateClocks,250);updateClocks();}
+function updateClocks(){
+  if(state.view!=='player'||!state.active){clearInterval(uiInt);return;}
+  var a=state.active;
+  var ex=document.getElementById('exClock');
+  if(ex)ex.textContent=fmtClock(a.exStart?Math.max(0,Math.floor((Date.now()-a.exStart)/1000)):0);
+  var rc=document.getElementById('restClock');
+  if(rc&&a.restEnd){
+    var rem=Math.ceil((a.restEnd-Date.now())/1000);
+    if(rem<=0){a.restEnd=null;saveActive();if(navigator.vibrate)navigator.vibrate(180);render();return;}
+    rc.textContent=fmtClock(rem);
+  }
 }
-function afterPlayer(){if(state.active&&state.active.restEnd&&state.active.restEnd>Date.now())tickRest();}
+function afterPlayer(){startUITick();requestWake();}
+
+/* keep the screen awake during a workout (Wake Lock API; iOS Safari 16.4+) */
+var wakeLock=null;
+function requestWake(){
+  if(wakeLock||!navigator.wakeLock||!navigator.wakeLock.request)return;
+  try{navigator.wakeLock.request('screen').then(function(wl){wakeLock=wl;if(wl.addEventListener)wl.addEventListener('release',function(){wakeLock=null;});}).catch(function(){});}catch(e){}
+}
+function releaseWake(){if(wakeLock){try{wakeLock.release();}catch(e){}wakeLock=null;}}
+if(document.addEventListener)document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&state.view==='player'&&state.active)requestWake();
+});
 
 /* ============================ HISTORY ============================ */
 function renderHistory(){
@@ -957,7 +976,7 @@ var A={
   // home
   pickStart:function(id){state.startRoutineId=id;render();},
   start:function(mode){if(state.active&&!confirm('You have a workout in progress. Start a new one?'))return;startSession(mode);},
-  resume:function(){state.view='player';render();},
+  resume:function(){if(state.active)state.active.exStart=Date.now();state.view='player';render();},
   dismissNudge:function(){state.nudgeDismissed=true;render();},
   dismissReengage:function(){state.reengageDismissed=true;render();},
   dismissReminder:function(){state._reminderDismissed=todayKey();render();},
@@ -984,14 +1003,14 @@ var A={
   toggleSet:function(i){var pe=state.active.perEx[state.active.order[state.active.idx]];if(!pe.sets)pe.sets=[];pe.sets[i]=!pe.sets[i];pe.skipped=false;saveActive();render();},
   exField:function(f,v){var pe=state.active.perEx[state.active.order[state.active.idx]];pe[f]=v;saveActive();},
   sessNote:function(v){state.active.notes=v;saveActive();},
-  next:function(){if(state.active.idx<state.active.order.length-1){state.active.idx++;clearInterval(restInt);saveActive();window.scrollTo(0,0);render();}},
-  prev:function(){if(state.active.idx>0){state.active.idx--;clearInterval(restInt);saveActive();window.scrollTo(0,0);render();}},
-  skip:function(){var a=state.active;a.perEx[a.order[a.idx]].skipped=true;if(a.idx<a.order.length-1)a.idx++;clearInterval(restInt);saveActive();window.scrollTo(0,0);render();},
-  swap:function(){var a=state.active;if(a.order.length<2)return;var id=a.order.splice(a.idx,1)[0];a.order.push(id);if(a.idx>=a.order.length)a.idx=a.order.length-1;clearInterval(restInt);saveActive();render();},
-  restStart:function(){state.active.restEnd=Date.now()+state.settings.restDefault*1000;saveActive();render();tickRest();},
-  restStop:function(){state.active.restEnd=null;clearInterval(restInt);saveActive();render();},
-  rest:function(delta){var a=state.active;if(a.restEnd){a.restEnd+=delta*1000;if(a.restEnd<Date.now())a.restEnd=null;}else{state.settings.restDefault=Math.max(15,state.settings.restDefault+delta);saveSettings();}saveActive();render();if(a.restEnd)tickRest();},
-  playerExit:function(){clearInterval(restInt);state.view='home';render();},
+  next:function(){if(state.active.idx<state.active.order.length-1){state.active.idx++;state.active.exStart=Date.now();state.active.restEnd=null;saveActive();window.scrollTo(0,0);render();}},
+  prev:function(){if(state.active.idx>0){state.active.idx--;state.active.exStart=Date.now();state.active.restEnd=null;saveActive();window.scrollTo(0,0);render();}},
+  skip:function(){var a=state.active;a.perEx[a.order[a.idx]].skipped=true;if(a.idx<a.order.length-1){a.idx++;a.exStart=Date.now();a.restEnd=null;}saveActive();window.scrollTo(0,0);render();},
+  swap:function(){var a=state.active;if(a.order.length<2)return;var id=a.order.splice(a.idx,1)[0];a.order.push(id);if(a.idx>=a.order.length)a.idx=a.order.length-1;a.exStart=Date.now();a.restEnd=null;saveActive();render();},
+  restStart:function(){state.active.restEnd=Date.now()+state.settings.restDefault*1000;saveActive();render();},
+  restStop:function(){state.active.restEnd=null;saveActive();render();},
+  rest:function(delta){var a=state.active;if(a.restEnd){a.restEnd+=delta*1000;if(a.restEnd<Date.now())a.restEnd=null;}else{state.settings.restDefault=Math.max(15,state.settings.restDefault+delta);saveSettings();}saveActive();render();},
+  playerExit:function(){clearInterval(uiInt);releaseWake();state.view='home';render();},
   endLog:function(){
     var a=state.active;if(!a)return;
     var completed=[];
@@ -1000,7 +1019,7 @@ var A={
     var session={id:'s'+Date.now(),date:a.date||todayKey(),routineId:a.routineId,startedAt:a.startedAt,endedAt:Date.now(),completedExercises:completed,wasEasyDay:a.mode==='easy',notes:a.notes||''};
     state.sessions.push(session);saveSessions();
     if(completed.length>0){state.backup.sessionsSinceLastBackup=(state.backup.sessionsSinceLastBackup||0)+1;saveBackup();}
-    clearInterval(restInt);state.active=null;localStorage.removeItem(K.active);
+    clearInterval(uiInt);releaseWake();state.active=null;localStorage.removeItem(K.active);
     state.view='home';state.justLogged=session.id;state.reengageDismissed=true;window.scrollTo(0,0);render();
     setTimeout(function(){toast(completed.length>0?'Logged — nice work showing up 👏':'Session logged');},60);
   },
@@ -1045,6 +1064,7 @@ function render(){
   if(!state.settings.onboarded){app.innerHTML=renderOnboard();return;}
   if(state.view==='player'&&state.active){app.innerHTML=renderPlayer();afterPlayer();return;}
   if(state.view==='player')state.view='home';
+  clearInterval(uiInt);releaseWake();
   var html=renderTopbar()+'<div class="main">';
   switch(state.view){
     case 'library':html+=renderLibrary();break;
