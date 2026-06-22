@@ -207,6 +207,17 @@ canvas.ch{width:100%;height:150px;display:block}
 .tiny{font-size:11.5px;color:var(--faint);line-height:1.5}
 .editgrid{display:flex;gap:10px;margin-bottom:10px}
 .editgrid>div{flex:1}
+/* library controls */
+.libctl{position:sticky;top:calc(env(safe-area-inset-top) + 60px);z-index:10;background:var(--bg);
+  padding:8px 0 8px;margin:-16px 0 0}
+.libsearch{position:relative}
+.libsearch .si{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.7;pointer-events:none}
+.libsearch input.t{padding-left:38px;padding-right:40px}
+.libsearch input.t::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none}
+.libsearch .sclear{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:32px;height:32px;
+  border-radius:9px;color:var(--muted);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.libgroup{margin-top:18px}
+.libgroup:first-child{margin-top:2px}
 </style>
 </head>
 <body>
@@ -290,7 +301,7 @@ function defaultBackup(){return {lastBackupDate:null,sessionsSinceLastBackup:0};
 
 /* ============================ STATE ============================ */
 var state={view:'home',routines:[],sessions:[],settings:{},backup:{},active:null,
-  ob:null,libRoutineId:'showup',startRoutineId:'showup',histExpand:{},trendExId:null,
+  ob:null,libRoutineId:'showup',libQuery:'',startRoutineId:'showup',histExpand:{},trendExId:null,
   nudgeDismissed:false,reengageDismissed:false,justLogged:null,homeStart:true,storageRecovered:false};
 
 function load(){
@@ -516,22 +527,63 @@ function reminderDueNow(){
 
 /* ============================ LIBRARY ============================ */
 function renderLibrary(){
-  var h='';
+  var r=routineById(state.libRoutineId);
+  var h='<div class="libctl">';
   if(state.routines.length>1){
-    h+='<div class="seg" style="margin-bottom:6px">';
-    state.routines.forEach(function(r){h+='<button class="'+(state.libRoutineId===r.id?'on':'')+'" onclick="A.libRoutine(\''+r.id+'\')">'+esc(r.name.split(' — ')[0])+'</button>';});
+    h+='<div class="seg" style="margin-bottom:8px">';
+    state.routines.forEach(function(x){h+='<button class="'+(state.libRoutineId===x.id?'on':'')+'" onclick="A.libRoutine(\''+x.id+'\')">'+esc(x.name.split(' — ')[0])+'</button>';});
     h+='</div>';
   }
-  var r=routineById(state.libRoutineId);
-  h+='<div class="section-label">'+esc(r.name)+' · '+r.exercises.length+' moves</div>';
-  r.exercises.forEach(function(ex){h+=exerciseCard(r.id,ex);});
+  h+='<div class="libsearch"><span class="si">🔎</span>'+
+    '<input class="t" id="libq" type="search" inputmode="search" autocomplete="off" autocorrect="off" '+
+    'placeholder="Search a move or muscle…" value="'+esc(state.libQuery||'')+'" oninput="A.libSearch(this.value)">'+
+    '<button class="sclear" id="libClear" onclick="A.libSearchClear()"'+((state.libQuery||'')?'':' style="display:none"')+'>✕</button></div>';
+  h+='</div>';
+
+  h+='<div id="libList">';
+  var defs=[
+    ['Warm-up',function(e){return e.isWarmup;}],
+    ['Main work',function(e){return !e.isWarmup&&!e.isCooldown;}],
+    ['Cool-down',function(e){return e.isCooldown;}]
+  ];
+  var present=defs.filter(function(d){return r.exercises.some(d[1]);});
+  var single=present.length<=1;
+  defs.forEach(function(d){
+    var list=r.exercises.filter(d[1]);
+    if(!list.length)return;
+    var label=single?esc(r.name):d[0];
+    h+='<div class="libgroup"><div class="section-label">'+label+' · '+list.length+' move'+(list.length===1?'':'s')+'</div>';
+    list.forEach(function(ex){h+=exerciseCard(r.id,ex);});
+    h+='</div>';
+  });
+  h+='<div class="empty" id="libEmpty" style="display:none"><div class="e">🔍</div>No moves match your search.</div>';
+  h+='</div>';
   h+=safetyStrip();
   return h;
+}
+function applyLibFilter(){
+  var list=document.getElementById('libList');if(!list)return;
+  var q=(state.libQuery||'').trim().toLowerCase();
+  var groups=list.querySelectorAll('.libgroup');var anyVisible=false;
+  for(var gi=0;gi<groups.length;gi++){
+    var cards=groups[gi].querySelectorAll('.ex');var vis=0;
+    for(var ci=0;ci<cards.length;ci++){
+      var hay=cards[ci].getAttribute('data-search')||'';
+      var show=!q||hay.indexOf(q)>=0;
+      cards[ci].style.display=show?'':'none';
+      if(show)vis++;
+    }
+    groups[gi].style.display=vis?'':'none';
+    if(vis)anyVisible=true;
+  }
+  var empty=document.getElementById('libEmpty');if(empty)empty.style.display=anyVisible?'none':'';
+  var clr=document.getElementById('libClear');if(clr)clr.style.display=q?'':'none';
 }
 function exerciseCard(rid,ex){
   var open=state.libExpand===ex.id;var editing=state.libEdit===ex.id;
   var tag=ex.isWarmup?'<span class="pill warn" style="margin-left:6px">Warm-up</span>':ex.isCooldown?'<span class="pill gray" style="margin-left:6px">Cool-down</span>':'';
-  var h='<div class="ex"><div class="eh" onclick="A.libExpand(\''+ex.id+'\')">'+
+  var hay=esc((ex.name+' '+ex.targetArea+' '+ex.reps).toLowerCase());
+  var h='<div class="ex" data-search="'+hay+'"><div class="eh" onclick="A.libExpand(\''+ex.id+'\')">'+
     '<span class="em">'+ex.em+'</span><div style="flex:1"><div class="en">'+esc(ex.name)+tag+'</div>'+
     '<div class="et">'+ex.sets+' × '+esc(ex.reps)+' · '+esc(ex.targetArea)+'</div></div>'+
     '<span class="ar'+(open?' open':'')+'">▾</span></div>';
@@ -998,6 +1050,8 @@ var A={
   dismissRecovered:function(){state.storageRecovered=false;render();},
   // library
   libRoutine:function(id){state.libRoutineId=id;state.libExpand=null;state.libEdit=null;render();},
+  libSearch:function(v){state.libQuery=v;applyLibFilter();},
+  libSearchClear:function(){state.libQuery='';var i=document.getElementById('libq');if(i){i.value='';i.focus();}applyLibFilter();},
   libExpand:function(id){state.libExpand=state.libExpand===id?null:id;state.libEdit=null;render();},
   libEditToggle:function(id){state.libEdit=state.libEdit===id?null:id;render();},
   libSave:function(rid,exid){
@@ -1095,6 +1149,7 @@ function render(){
   }
   html+='</div>'+renderTabbar();
   app.innerHTML=html;
+  if(state.view==='library')applyLibFilter();
   if(state.view==='progress')afterProgress();
   // fire one in-app notification if due
   maybeNotify();
