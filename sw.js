@@ -4,7 +4,7 @@
  * a "recache" message), serve cache-first with background refresh, and fall
  * back to cached index.html for navigations when offline.
  */
-var CACHE = 'showup-shell-v1';
+var CACHE = 'showup-shell-v2';
 var CORE = [
   './',
   './index.html',
